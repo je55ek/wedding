@@ -1,0 +1,8 @@
+name: wedding
+dependencies:
+- pip
+- python=3.6.4
+- setuptools
+- toolz=0.9.0
+- pip:
+  - marshmallow==2.15.0
