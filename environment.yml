@@ -1,6 +1,10 @@
 name: wedding
 dependencies:
+- boto3=1.4.8
+- botocore=1.8.5
+- mypy=0.550
 - pip
+- pytest=3.3.2
 - python=3.6.4
 - setuptools
 - toolz=0.9.0
