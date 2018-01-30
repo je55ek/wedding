@@ -1,56 +1,42 @@
-from collections import namedtuple
-from typing import Mapping, Tuple, Type, NamedTuple
+from marshmallow.fields import String, Boolean
 
-from marshmallow import Schema
-from marshmallow.decorators import post_load
-from marshmallow.fields import Field, Nested, String, Boolean
-from toolz.dicttoolz import valfilter
+from wedding.general.model import JsonCodec, codec, required, optional, build, JsonEncoder
+from wedding.general.store import Store
+from wedding.general.aws.dynamodb import DynamoDbStore
 
 
-def _required(cls, name = None, **kwargs):
-    return cls(
-        **valfilter(
-            lambda x: x is not None,
-            {**kwargs, 'load_from': name, 'dump_to': name}
-        )
+Email, EmailSchema = build('Email', {
+    'username': required(String),
+    'hostname': required(String)
+})
+EmailCodec: JsonCodec[Email] = codec(EmailSchema(strict=True))
+
+
+Guest, GuestSchema = build('Guest', {
+    'id'         : required(String),
+    'first_name' : required(String, 'firstName'),
+    'last_name'  : required(String, 'lastName'),
+    'email'      : optional(EmailSchema),
+    'invited'    : required(Boolean),
+    'attending'  : required(Boolean)
+})
+GuestCodec: JsonCodec[Guest] = codec(GuestSchema(strict=True))
+
+
+Party, PartySchema = build('Party', {
+    'id'     : required(String),
+    'title'  : required(String),
+    'guests' : required(GuestSchema, many=True)
+})
+PartyCodec: JsonCodec[Party] = codec(PartySchema(strict=True))
+
+
+PartyStore = Store[str, Party]
+
+
+def party_store(dynamo_table) -> PartyStore:
+    return DynamoDbStore[str, Party](
+        dynamo_table,
+        JsonEncoder[str](lambda i: {'id': i}),
+        PartyCodec
     )
-
-
-def _build(name: str,
-           fields: Mapping[str, Field]) -> Tuple[type, Type[Schema]]:
-    cls = namedtuple(name, fields.keys())
-
-    @post_load
-    def to_namedtuple(self, data):
-        return cls(**data)
-
-    schema = type(
-        '{}Schema'.format(name),
-        (Schema,),
-        {**fields, '_to_namedtuple': to_namedtuple}
-    )
-
-    return cls, schema
-
-
-Email, EmailSchema = _build('Email', {
-    'username': _required(String),
-    'hostname': _required(String)
-})
-
-
-Guest, GuestSchema = _build('Guest', {
-    'id'         : _required(String             ),
-    'first_name' : _required(String, 'firstName'),
-    'last_name'  : _required(String, 'lastName' ),
-    'email'      : Nested   (EmailSchema        ),
-    'invited'    : _required(Boolean            ),
-    'attending'  : _required(Boolean            )
-})
-
-
-Party, PartySchema = _build('Party', {
-    'id'     : _required(String),
-    'title'  : _required(String),
-    'guests' : Nested(GuestSchema, many = True, required = True)
-})

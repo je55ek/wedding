@@ -1,0 +1,37 @@
+AWSTemplateFormatVersion : '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Flying Js serverless wedding RSVP application.
+
+Resources:
+
+  Parties:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: app.parties_handler
+      Runtime: python3.6
+      Events:
+        GetParties:
+          Type: Api
+          Properties:
+            Path: /parties
+            Method: get
+        GetParty:
+          Type: Api
+          Properties:
+            Path: /parties/{party}
+            Method: get
+        UpdateParty:
+          Type: Api
+          Properties:
+            Path: /parties/{party}
+            Method: put
+        CreateParty:
+          Type: Api
+          Properties:
+            Path: /parties
+            Method: post
+        DeleteParty:
+          Type: Api
+          Properties:
+            Path: /parties/{party}
+            Method: delete
