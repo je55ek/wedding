@@ -1,12 +1,16 @@
 import boto3
 
-from wedding.rest.parties import parties_resource
-from wedding.model import party_store, PartyCodec
+from wedding.model import party_store, PartyCodec, PartySchema, Party
+from wedding.general.model import codec
+from wedding.general.resource import StoreBackedResource
 from tests.data_generators import guest, create_party
 
 
 store = party_store(boto3.resource('dynamodb').Table('Parties'))
-parties_rest = parties_resource(store)
+parties_rest = StoreBackedResource[Party](
+    store,
+    codec(PartySchema(strict=True))
+)
 parties = [
     create_party('1', guest('Ella'  ), guest('Jenny')),
     create_party('2', guest('Pepino'), guest('Jesse'))
