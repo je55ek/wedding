@@ -2,8 +2,9 @@ import boto3
 
 from toolz.itertoolz import first
 
-from wedding.dynamodb import DynamoDbStore
-from wedding.model import Party, PartyCodec, JsonEncoder
+from wedding.general.aws.dynamodb import DynamoDbStore
+from wedding.model import Party, PartyCodec
+from wedding.general.model import JsonEncoder
 from tests.data_generators import create_party, guest
 
 

@@ -1,8 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import TypeVar, Generic, Iterable, Callable, Optional
 
-
-from wedding.functional import option
+from wedding.general.functional import option
 
 K = TypeVar('K')
 V = TypeVar('V')

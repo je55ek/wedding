@@ -1,9 +1,8 @@
 from typing import TypeVar, Optional, Iterable
 
-from wedding.model import JsonCodec, JsonEncoder
-from wedding.store import Store
-from wedding.functional import option
-
+from wedding.general.model import JsonEncoder, JsonCodec
+from wedding.general.store import Store
+from wedding.general.functional import option
 
 K = TypeVar('K')
 V = TypeVar('V')
@@ -15,7 +14,7 @@ class DynamoDbStore(Store[K, V]):
 
     def __init__(self,
                  dynamo_table                ,
-                 key_encoder : JsonEncoder[V],
+                 key_encoder : JsonEncoder[K],
                  value_codec : JsonCodec  [V]) -> None:
         self.__table      = dynamo_table
         self.__encode_key = key_encoder

@@ -1,10 +1,10 @@
 from typing import Optional
 
-from wedding.functional import option
+from wedding.general.functional import option
 from wedding.model import Guest, Email, Party
 
 
-def guest(first_name: str, maybe_username: Optional[str]) -> Guest:
+def guest(first_name: str, maybe_username: Optional[str] = None) -> Guest:
     return Guest(
         id = 'id',
         first_name = first_name,
@@ -14,7 +14,7 @@ def guest(first_name: str, maybe_username: Optional[str]) -> Guest:
                 username = username,
                 hostname = 'doe.com'
             )
-        )(maybe_username),
+                            )(maybe_username),
         invited = False,
         attending = False
     )
