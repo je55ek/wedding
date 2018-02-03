@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
       name        = 'wedding',
@@ -6,10 +6,8 @@ setup(
       description = 'Flying Js serverless wedding RSVP application.',
       author      = 'Jesse Kelly',
       license     = 'MIT',
-      packages    = ['wedding'],
+      packages    = find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
       install_requires = [
-          'boto3 == 1.4.8',
-          'botocore == 1.8.5',
           'toolz == 0.9.0',
           'marshmallow == 2.15.0',
           'configargparse == 0.12.0'
@@ -18,6 +16,7 @@ setup(
           'pytest == 3.3.2'
       ],
       extras_require = {
-          'typecheck': ['mypy == 0.550']
+          'typecheck': ['mypy == 0.550'],
+          'local': ['boto3 == 1.4.8', 'botocore == 1.8.5']
       }
 )
