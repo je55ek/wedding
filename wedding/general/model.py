@@ -10,7 +10,7 @@ from wedding.general.functional.option import not_none
 
 
 V = TypeVar('V')
-Json = Dict[str, Any]
+Json = Union[Dict[str, Any]]
 
 
 class JsonEncoder(Generic[V], Callable[[V], Json]):

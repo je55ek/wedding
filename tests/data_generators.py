@@ -20,9 +20,9 @@ def guest(first_name: str, maybe_username: Optional[str] = None) -> Guest:
     )
 
 
-def create_party(*guests) -> Party:
+def create_party(id: str, *guests) -> Party:
     return Party(
-        id = 'id',
+        id = id,
         title = 'Some Family',
         guests = list(guests)
     )

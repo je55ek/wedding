@@ -1,11 +1,10 @@
-from typing import List
-
 from wedding.general.resource import StoreBackedResource
-from wedding.model import Party, PartyStore, codec, PartySchema
+from wedding.general.model import codec
+from wedding.model import Party, PartyStore, PartySchema
 
 
 def parties_resource(store: PartyStore):
-    return StoreBackedResource[str, List[Party]](
+    return StoreBackedResource[Party](
         store,
-        codec(PartySchema(strict=True, many=True))
+        codec(PartySchema(strict=True))
     )

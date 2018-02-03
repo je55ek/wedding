@@ -15,6 +15,7 @@ store = DynamoDbStore[str, Party](
     PartyCodec
 )
 kellys = create_party(
+    'kellys',
     guest('jesse', 'jkelly'),
     guest('pepino', 'pepulon'),
     guest('jenny', 'jykelly'),

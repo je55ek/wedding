@@ -4,6 +4,7 @@ from wedding.model import *
 
 def test_party_roundtrip():
     party = create_party(
+        'does',
         guest('John', 'john'),
         guest('Jane', 'jane')
     )
