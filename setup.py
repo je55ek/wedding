@@ -17,6 +17,7 @@ setup(
       ],
       extras_require = {
           'typecheck': ['mypy == 0.550'],
-          'local': ['boto3 == 1.4.8', 'botocore == 1.8.5']
+          'local': ['boto3 == 1.4.8', 'botocore == 1.8.5'],
+          'aws': ['awscli == 1.14.32']
       }
 )

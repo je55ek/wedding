@@ -10,4 +10,5 @@ dependencies:
 - setuptools
 - toolz=0.9.0
 - pip:
+  - awscli==1.14.32
   - marshmallow==2.15.0

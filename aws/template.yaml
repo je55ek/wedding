@@ -2,13 +2,39 @@ AWSTemplateFormatVersion : '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: Flying Js serverless wedding RSVP application.
 
-Resources:
+Parameters:
+  BucketName:
+    Type: String
+    Description: Name of the S3 bucket that contains the zipped wedding code.
+    Default: flyingj-code-dev
+  CodeKey:
+    Type: String
+    Description: S3 object key of the zipped wedding code.
+  Environment:
+    Type: String
+    Default: dev
+    AllowedValues:
+      - dev
+      - prod
 
+Resources:
   Parties:
     Type: AWS::Serverless::Function
     Properties:
       Handler: app.parties_handler
       Runtime: python3.6
+      Policies: AmazonDynamoDBFullAccess
+      CodeUri:
+        Bucket: !Ref BucketName
+        Key: !Ref CodeKey
+      Environment:
+        Variables:
+          PARTIES_TABLE: !Ref PartiesTable
+      Tags:
+        - Key: environment 
+          Value: !Ref Environment
+        - Key: project
+          Value: wedding
       Events:
         GetParties:
           Type: Api
@@ -18,12 +44,12 @@ Resources:
         GetParty:
           Type: Api
           Properties:
-            Path: /parties/{party}
+            Path: /parties/{id}
             Method: get
         UpdateParty:
           Type: Api
           Properties:
-            Path: /parties/{party}
+            Path: /parties/{id}
             Method: put
         CreateParty:
           Type: Api
@@ -33,5 +59,20 @@ Resources:
         DeleteParty:
           Type: Api
           Properties:
-            Path: /parties/{party}
+            Path: /parties/{id}
             Method: delete
+  PartiesTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      PrimaryKey:
+        Name: id
+        Type: String
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      TableName: Parties
+      Tags:
+        - Key: environment 
+          Value: !Ref Environment
+        - Key: project
+          Value: wedding
