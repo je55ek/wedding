@@ -63,8 +63,8 @@ class RestResource(Generic[_A]):
 
     def __route(self, event):
         method   = event[RestResource.METHOD_FIELD]
-        query    = event.get(RestResource.QUERY_FIELD, {})
-        path     = event.get(RestResource.PATH_FIELD , {})
+        query    = event.get(RestResource.QUERY_FIELD) or {}
+        path     = event.get(RestResource.PATH_FIELD ) or {}
         maybe_id = path.get('id')
 
         if method == 'GET':
