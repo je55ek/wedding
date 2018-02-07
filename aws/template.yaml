@@ -18,22 +18,26 @@ Resources:
       Handler: app.parties_handler
       Runtime: python3.6
       Policies:
-        - Effect: Allow
-          Resource: !Ref PartiesTable
-          Action:
-            - dynamodb:BatchGetItem
-            - dynamodb:BatchWriteItem
-            - dynamodb:PutItem
-            - dynamodb:DeleteItem
-            - dynamodb:Scan
-            - dynamodb:Query
-            - dynamodb:UpdateItem
-            - dynamodb:CreateTable
-            - dynamodb:DescribeTable
-            - dynamodb:GetShardIterator
-            - dynamodb:GetItem
-            - dynamodb:UpdateTable
-            - dynamodb:GetRecords
+        - Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Resource: !GetAtt
+              - PartiesTable
+              - Arn
+            Action:
+              - dynamodb:BatchGetItem
+              - dynamodb:BatchWriteItem
+              - dynamodb:PutItem
+              - dynamodb:DeleteItem
+              - dynamodb:Scan
+              - dynamodb:Query
+              - dynamodb:UpdateItem
+              - dynamodb:CreateTable
+              - dynamodb:DescribeTable
+              - dynamodb:GetShardIterator
+              - dynamodb:GetItem
+              - dynamodb:UpdateTable
+              - dynamodb:GetRecords
       CodeUri:
         Bucket: !Ref BucketName
         Key: !Ref CodeKey
