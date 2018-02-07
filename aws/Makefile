@@ -1,6 +1,10 @@
-BUILDDIR=build
+BUILDDIR := build
 VERSION := $(shell git describe --long --dirty)
 ZIPNAME := wedding-app-$(VERSION).zip
+CODE_BUCKET := flyingj-code-dev
+TEMPLATE := template.yaml
+STACK_NAME := wedding
+AWS_TAGS := "project=wedding"
 
 packages:
 	mkdir -p $(BUILDDIR)
@@ -13,6 +17,15 @@ all: packages
 		zip -r $(ZIPNAME) ./*; \
 		cd ../ ;\
 		mv $(BUILDDIR)/$(ZIPNAME) ./
+
+deploy: all
+	aws s3 mv $(ZIPNAME) s3://$(CODE_BUCKET)/$(ZIPNAME); \
+  aws cloudformation deploy \
+    --template-file $(TEMPLATE) \
+    --stack-name $(STACK_NAME) \
+    --tags $(AWS_TAGS) \
+    --parameter-overrides "CodeKey=$(ZIPNAME)" "CodeBucket=$(CODE_BUCKET)" \
+    --capabilities CAPABILITY_NAMED_IAM
 
 clean:
 	rm -rf $(BUILDDIR)
