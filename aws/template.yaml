@@ -10,12 +10,6 @@ Parameters:
   CodeKey:
     Type: String
     Description: S3 object key of the zipped wedding code.
-  Environment:
-    Type: String
-    Default: dev
-    AllowedValues:
-      - dev
-      - prod
 
 Resources:
   Parties:
@@ -23,18 +17,29 @@ Resources:
     Properties:
       Handler: app.parties_handler
       Runtime: python3.6
-      Policies: AmazonDynamoDBFullAccess
+      Policies:
+        - Effect: Allow
+          Resource: !Ref PartiesTable
+          Action:
+            - dynamodb:BatchGetItem
+            - dynamodb:BatchWriteItem
+            - dynamodb:PutItem
+            - dynamodb:DeleteItem
+            - dynamodb:Scan
+            - dynamodb:Query
+            - dynamodb:UpdateItem
+            - dynamodb:CreateTable
+            - dynamodb:DescribeTable
+            - dynamodb:GetShardIterator
+            - dynamodb:GetItem
+            - dynamodb:UpdateTable
+            - dynamodb:GetRecords
       CodeUri:
         Bucket: !Ref BucketName
         Key: !Ref CodeKey
       Environment:
         Variables:
           PARTIES_TABLE: !Ref PartiesTable
-      Tags:
-        - Key: environment 
-          Value: !Ref Environment
-        - Key: project
-          Value: wedding
       Events:
         GetParties:
           Type: Api
@@ -70,9 +75,3 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
-      TableName: Parties
-      Tags:
-        - Key: environment 
-          Value: !Ref Environment
-        - Key: project
-          Value: wedding
