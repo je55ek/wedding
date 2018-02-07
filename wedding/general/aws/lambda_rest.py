@@ -4,6 +4,7 @@ from typing import Generic, TypeVar, Union, Optional, Iterable
 from marshmallow.exceptions import MarshmallowError
 from toolz.functoolz import excepts, partial
 from toolz.itertoolz import isiterable
+from toolz.dicttoolz import merge
 
 from wedding.general.model import JsonCodec, Json
 from wedding.general.functional import option
@@ -20,22 +21,22 @@ class HttpResponse:
 
 class Created(HttpResponse):
     def as_json(self):
-        return { 'status': 201 }
+        return { 'statusCode': 201 }
 
 
 class NoContent(HttpResponse):
     def as_json(self):
-        return { 'status': 204 }
+        return { 'statusCode': 204 }
 
 
 class MethodNotAllowed(HttpResponse):
     def as_json(self):
-        return { 'status': 405 }
+        return { 'statusCode': 405 }
 
 
 class NotFound(HttpResponse):
     def as_json(self):
-        return { 'status': 404 }
+        return { 'statusCode': 404 }
 
 
 class BadRequest(HttpResponse):
@@ -43,7 +44,7 @@ class BadRequest(HttpResponse):
         self.__message = message
 
     def as_json(self):
-        return { 'status': 405, 'body': self.__message }
+        return { 'statusCode': 405, 'body': self.__message }
 
 
 class RestResource(Generic[_A]):
@@ -91,17 +92,24 @@ class RestResource(Generic[_A]):
         return BadRequest(str(error))
 
     def __handle(self, event):
-        response = excepts(
+        result = excepts(
             MarshmallowError,
             self.__route,
             RestResource.__json_error
         )(event)
 
-        return (
-            response.as_json() if isinstance(response, HttpResponse) else
-            { 'items': [self.__codec.encode(item) for item in response] } if isinstance(response, (map, list)) else
-            self.__codec.encode(response)
+        response = (
+            result.as_json() if isinstance(result, HttpResponse) else
+            {
+                'statusCode': 200,
+                'body': (
+                    { 'items': [self.__codec.encode(item) for item in result] } if isinstance(result, (map, list)) else
+                    self.__codec.encode(result)
+                )
+            }
         )
+
+        return merge(response, {'isBase64Encoded': False, 'headers': {}})
 
     def create_handler(self):
         return lambda event, _: self.__handle(event)
