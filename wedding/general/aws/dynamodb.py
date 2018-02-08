@@ -22,11 +22,11 @@ class DynamoDbStore(Store[K, V]):
 
     def get(self, key: K) -> Optional[V]:
         return option.fmap(self.__val.decode)(
-            self.__table.get_item(Key = self.__encode_key(key))['Item']
+            self.__table.get_item(Key = self.__encode_key(key)).get('Item')
         )
 
     def get_all(self) -> Iterable[V]:
-        return map(self.__val.decode, self.__table.scan()['Items'])
+        return map(self.__val.decode, self.__table.scan().get('Items'))
 
     def put(self, value: V) -> None:
         self.__table.put_item(Item = self.__val.encode(value))
