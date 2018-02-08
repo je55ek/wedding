@@ -1,5 +1,4 @@
 import json
-from abc import abstractmethod
 from typing import Generic, TypeVar, Union, Optional, Iterable
 
 from marshmallow.exceptions import MarshmallowError
@@ -7,45 +6,12 @@ from toolz.functoolz import excepts, partial
 from toolz.itertoolz import isiterable
 from toolz.dicttoolz import merge
 
+from wedding.general.aws.rest.responses import HttpResponse, MethodNotAllowed, NotFound, BadRequest
 from wedding.general.model import JsonCodec, Json
 from wedding.general.functional import option
 
 
 _A = TypeVar('_A')
-
-
-class HttpResponse:
-    @abstractmethod
-    def as_json(self):
-        pass
-
-
-class Created(HttpResponse):
-    def as_json(self):
-        return { 'statusCode': 201 }
-
-
-class NoContent(HttpResponse):
-    def as_json(self):
-        return { 'statusCode': 204 }
-
-
-class MethodNotAllowed(HttpResponse):
-    def as_json(self):
-        return { 'statusCode': 405 }
-
-
-class NotFound(HttpResponse):
-    def as_json(self):
-        return { 'statusCode': 404 }
-
-
-class BadRequest(HttpResponse):
-    def __init__(self, message):
-        self.__message = message
-
-    def as_json(self):
-        return { 'statusCode': 405, 'body': self.__message }
 
 
 class RestResource(Generic[_A]):
