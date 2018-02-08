@@ -1,3 +1,4 @@
+import json
 from abc import abstractmethod
 from typing import Generic, TypeVar, Union, Optional, Iterable
 
@@ -102,7 +103,7 @@ class RestResource(Generic[_A]):
             result.as_json() if isinstance(result, HttpResponse) else
             {
                 'statusCode': 200,
-                'body': (
+                'body': json.dumps(
                     { 'items': [self.__codec.encode(item) for item in result] } if isinstance(result, (map, list)) else
                     self.__codec.encode(result)
                 )
