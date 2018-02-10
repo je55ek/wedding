@@ -23,7 +23,7 @@ class RestResource(Generic[_A]):
         self.__codec = codec
 
     def __payload(self, event):
-        body = event['body']
+        body = json.loads(event['body'])
         return option.cata(
             partial(map, self.__codec.decode),
             lambda: self.__codec.decode(body)
