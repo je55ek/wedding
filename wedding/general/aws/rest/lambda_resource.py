@@ -5,7 +5,7 @@ from marshmallow.exceptions import MarshmallowError
 from toolz.functoolz import excepts, partial, compose
 from toolz.dicttoolz import merge
 
-from wedding.general.aws.rest.responses import HttpResponse, MethodNotAllowed, NotFound, BadRequest
+from wedding.general.aws.rest.responses import HttpResponse, MethodNotAllowed, NotFound, BadRequest, InternalServerError
 from wedding.general.model import JsonCodec, Json
 from wedding.general.functional import option
 
@@ -24,7 +24,7 @@ class RestResource(Generic[_A]):
     def __payload(self, event):
         body = json.loads(event['body'])
         return option.cata(
-            partial(map, self.__codec.decode),
+            partial(compose(list, map), self.__codec.decode),
             lambda: self.__codec.decode(body)
         )(body.get('items'))
 
@@ -42,8 +42,8 @@ class RestResource(Generic[_A]):
         elif method == 'POST':
             body = self.__payload(event)
             return (
-                self._post(body) if isinstance(body, dict) else
-                self._post_many(body)
+                self._post_many(body) if isinstance(body, list) else
+                self._post(body)
             )
         elif method == 'DELETE':
             return option.cata(
@@ -59,7 +59,7 @@ class RestResource(Generic[_A]):
 
     @staticmethod
     def __internal_error(error: Exception) -> HttpResponse:
-        return BadRequest(str(error))
+        return InternalServerError(str(error))
 
     @staticmethod
     def __handler(exc, handler):
