@@ -18,7 +18,7 @@ class HttpResponse(ABC):
     def as_json(self) -> Dict[str, Any]:
         return {
             'statusCode': self.status_code,
-            'body': self.body,
+            'body': f'{{ "message": "{self.body}" }}',
             'isBase64Encoded': False
         }
 
