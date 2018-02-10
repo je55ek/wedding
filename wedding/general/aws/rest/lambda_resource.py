@@ -3,7 +3,6 @@ from typing import Generic, TypeVar, Union, Optional, Iterable
 
 from marshmallow.exceptions import MarshmallowError
 from toolz.functoolz import excepts, partial
-from toolz.itertoolz import isiterable
 from toolz.dicttoolz import merge
 
 from wedding.general.aws.rest.responses import HttpResponse, MethodNotAllowed, NotFound, BadRequest
@@ -43,8 +42,8 @@ class RestResource(Generic[_A]):
         elif method == 'POST':
             body = self.__payload(event)
             return (
-                self._post_many(body) if isiterable(body) else
-                self._post(body)
+                self._post(body) if isinstance(body, dict) else
+                self._post_many(body)
             )
         elif method == 'DELETE':
             return option.cata(
