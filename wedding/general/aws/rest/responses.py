@@ -51,3 +51,12 @@ class BadRequest(HttpResponse):
     @property
     def status_code(self):
         return 405
+
+
+class InternalServerError(HttpResponse):
+    @property
+    def status_code(self):
+        return 500
+
+    def __init__(self, message):
+        super().__init__(message)

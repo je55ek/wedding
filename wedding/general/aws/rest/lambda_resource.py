@@ -2,7 +2,7 @@ import json
 from typing import Generic, TypeVar, Union, Optional, Iterable
 
 from marshmallow.exceptions import MarshmallowError
-from toolz.functoolz import excepts, partial
+from toolz.functoolz import excepts, partial, compose
 from toolz.dicttoolz import merge
 
 from wedding.general.aws.rest.responses import HttpResponse, MethodNotAllowed, NotFound, BadRequest
@@ -57,12 +57,21 @@ class RestResource(Generic[_A]):
     def __json_error(error: MarshmallowError) -> HttpResponse:
         return BadRequest(str(error))
 
+    @staticmethod
+    def __internal_error(error: Exception) -> HttpResponse:
+        return BadRequest(str(error))
+
+    @staticmethod
+    def __handler(exc, handler):
+        return lambda f: excepts(exc, f, handler)
+
     def __handle(self, event):
-        result = excepts(
-            MarshmallowError,
-            self.__route,
-            RestResource.__json_error
-        )(event)
+        safe_route = compose(
+            self.__handler(Exception       , self.__internal_error),
+            self.__handler(MarshmallowError, self.__json_error    )
+        )(self.__route)
+
+        result = safe_route(event)
 
         response = (
             result.as_json() if isinstance(result, HttpResponse) else
