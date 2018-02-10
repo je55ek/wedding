@@ -1,10 +1,15 @@
 from typing import Dict, Any, Optional
 from abc import abstractmethod, ABC
 
+from wedding.general.functional import option
+
 
 class HttpResponse(ABC):
     def __init__(self, body: Optional[str] = None) -> None:
-        self.__body = body or ''
+        self.__body = option.cata(
+            '{{ "message": "{}" }}'.format,
+            lambda: ''
+        )(body)
 
     @property
     @abstractmethod
@@ -12,13 +17,13 @@ class HttpResponse(ABC):
         pass
 
     @property
-    def body(self) -> str:
+    def body(self) -> Optional[str]:
         return self.__body
 
     def as_json(self) -> Dict[str, Any]:
         return {
             'statusCode': self.status_code,
-            'body': f'{{ "message": "{self.body}" }}',
+            'body': self.body,
             'isBase64Encoded': False
         }
 
