@@ -1,5 +1,7 @@
 from typing import TypeVar, Optional, Iterable
 
+from botocore.exceptions import ValidationError, ClientError
+
 from wedding.general.model import JsonEncoder, JsonCodec
 from wedding.general.store import Store
 from wedding.general.functional import option
@@ -32,9 +34,14 @@ class DynamoDbStore(Store[K, V]):
         self.__table.put_item(Item = self.__val.encode(value))
 
     def put_all(self, values: Iterable[V]) -> None:
-        with self.__table.batch_writer() as batch:
-            for v in values:
-                batch.put_item(Item = self.__val.encode(v))
+        try:
+            with self.__table.batch_writer() as batch:
+                for v in values:
+                    batch.put_item(Item = self.__val.encode(v))
+        except ValidationError as exc:
+            raise RuntimeError(f'DynamoDB failed to put {list(values)}: {str(exc)}')
+        except ClientError as exc:
+            raise RuntimeError(f'DynamoDB failed to put {list(values)}: {str(exc)}')
 
     def delete(self, key: K) -> None:
         self.__table.delete_item(Key = self.__encode_key(key))
