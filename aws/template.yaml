@@ -59,7 +59,7 @@ Resources:
           Type: Api
           Properties:
             Path: /parties/{id}
-            Method: put
+            Method: post
         CreateParty:
           Type: Api
           Properties:
