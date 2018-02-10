@@ -1,3 +1,5 @@
+import json
+
 import boto3
 
 from wedding.model import party_store, PartyCodec, PartySchema, Party
@@ -21,9 +23,11 @@ handler = parties_rest.create_handler()
 def test_get_all():
     store.put_all(parties)
     response = sorted(
-        handler(
-            { parties_rest.METHOD_FIELD: 'GET' },
-            None
+        json.loads(
+            handler(
+                { parties_rest.METHOD_FIELD: 'GET' },
+                None
+            )['body']
         )['items'],
         key = lambda party: party['guests'][0]['firstName']
     )
@@ -36,9 +40,9 @@ def test_get_all():
 def test_get_one():
     store.put_all(parties)
     response = handler(
-        { parties_rest.METHOD_FIELD: 'GET' , parties_rest.PATH_FIELD: { 'id': parties[0].id } },
+        { parties_rest.METHOD_FIELD: 'GET', parties_rest.PATH_FIELD: { 'id': parties[0].id } },
         None
     )
     for party in parties:
         store.delete(party.id)
-    assert PartyCodec.decode(response) == parties[0]
+    assert PartyCodec.decode(json.loads(response['body'])) == parties[0]
