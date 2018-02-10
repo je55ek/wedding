@@ -1,14 +1,13 @@
 import boto3
 from configargparse import ArgParser
 from wedding.general.resource import StoreBackedResource
-from wedding.general.model import codec
-from wedding.model import Party, party_store, PartySchema, PartyStore
+from wedding.model import Party, party_store, PartyCodec, PartyStore
 
 
 def parties_resource(store: PartyStore):
     return StoreBackedResource[Party](
         store,
-        codec(PartySchema(strict=True))
+        PartyCodec
     )
 
 
