@@ -62,7 +62,7 @@ PassengerGroup, PassengerGroupSchema = build('PassengerGroup', {
     'contact_name': required(String, 'contactName'     ),
     'contact'     : required(ContactSchema,   many=True)
 })
-PassengerGroupCodec: JsonCodec[PassengerGroup] = codec(PassengerSchema(strict=True))
+PassengerGroupCodec: JsonCodec[PassengerGroup] = codec(PassengerGroupSchema(strict=True))
 
 
 Driver, DriverSchema = build('Driver', {
