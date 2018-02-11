@@ -50,7 +50,6 @@ PhoneCodec: JsonCodec[Phone] = codec(PhoneSchema(strict=True))
 
 
 Contact, ContactSchema = build('Contact', {
-    'first_name': required(String, 'firstName'),
     'phone'     : required(PhoneSchema),
     'email'     : required(EmailSchema)
 })
