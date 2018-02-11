@@ -79,3 +79,137 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
+  Drivers:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: app.drivers_handler
+      Runtime: python3.6
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Resource: !GetAtt
+              - DriversTable
+              - Arn
+            Action:
+              - dynamodb:BatchGetItem
+              - dynamodb:BatchWriteItem
+              - dynamodb:PutItem
+              - dynamodb:DeleteItem
+              - dynamodb:Scan
+              - dynamodb:Query
+              - dynamodb:UpdateItem
+              - dynamodb:CreateTable
+              - dynamodb:DescribeTable
+              - dynamodb:GetShardIterator
+              - dynamodb:GetItem
+              - dynamodb:UpdateTable
+              - dynamodb:GetRecords
+      CodeUri:
+        Bucket: !Ref BucketName
+        Key: !Ref CodeKey
+      Environment:
+        Variables:
+          DRIVERS_TABLE: !Ref DriversTable
+      Events:
+        GetDrivers:
+          Type: Api
+          Properties:
+            Path: /drivers
+            Method: get
+        GetDriver:
+          Type: Api
+          Properties:
+            Path: /drivers/{id}
+            Method: get
+        UpdateDriver:
+          Type: Api
+          Properties:
+            Path: /drivers/{id}
+            Method: post
+        CreateDriver:
+          Type: Api
+          Properties:
+            Path: /drivers
+            Method: post
+        DeleteDriver:
+          Type: Api
+          Properties:
+            Path: /drivers/{id}
+            Method: delete
+  DriversTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      PrimaryKey:
+        Name: id
+        Type: String
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+  Passengers:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: app.passengers_handler
+      Runtime: python3.6
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Resource: !GetAtt
+              - PassengersTable
+              - Arn
+            Action:
+              - dynamodb:BatchGetItem
+              - dynamodb:BatchWriteItem
+              - dynamodb:PutItem
+              - dynamodb:DeleteItem
+              - dynamodb:Scan
+              - dynamodb:Query
+              - dynamodb:UpdateItem
+              - dynamodb:CreateTable
+              - dynamodb:DescribeTable
+              - dynamodb:GetShardIterator
+              - dynamodb:GetItem
+              - dynamodb:UpdateTable
+              - dynamodb:GetRecords
+      CodeUri:
+        Bucket: !Ref BucketName
+        Key: !Ref CodeKey
+      Environment:
+        Variables:
+          PASSENGERS_TABLE: !Ref PassengersTable
+      Events:
+        GetPassengers:
+          Type: Api
+          Properties:
+            Path: /passengers
+            Method: get
+        GetPassengers:
+          Type: Api
+          Properties:
+            Path: /passengers/{id}
+            Method: get
+        UpdatePassengers:
+          Type: Api
+          Properties:
+            Path: /passengers/{id}
+            Method: post
+        CreatePassengers:
+          Type: Api
+          Properties:
+            Path: /passengers
+            Method: post
+        DeletePassengers:
+          Type: Api
+          Properties:
+            Path: /passengers/{id}
+            Method: delete
+  PassengersTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      PrimaryKey:
+        Name: id
+        Type: String
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
