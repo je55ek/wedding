@@ -7,21 +7,20 @@ from wedding.general.store import Store
 from wedding.general.aws.dynamodb import DynamoDbStore
 
 
-Email, EmailSchema = build('Email', {
+EmailAddress, EmailAddressSchema = build('EmailAddress', {
     'username': required(String),
     'hostname': required(String)
 })
-EmailCodec: JsonCodec[Email] = codec(EmailSchema(strict=True))
+EmailAddressCodec: JsonCodec[EmailAddress] = codec(EmailAddressSchema(strict=True))
 
 
 Guest, GuestSchema = build('Guest', {
     'id'         : required(String),
     'first_name' : required(String, 'firstName'),
     'last_name'  : required(String, 'lastName'),
-    'email'      : optional(EmailSchema),
+    'email'      : optional(EmailAddressSchema),
     'invited'    : required(Boolean),
-    'attending'  : optional(Boolean),
-    'local'      : required(Boolean)
+    'attending'  : optional(Boolean)
 })
 GuestCodec: JsonCodec[Guest] = codec(GuestSchema(strict=True))
 
@@ -29,7 +28,9 @@ GuestCodec: JsonCodec[Guest] = codec(GuestSchema(strict=True))
 Party, PartySchema = build('Party', {
     'id'     : required(String),
     'title'  : required(String),
-    'guests' : required(GuestSchema, many=True)
+    'local'  : required(Boolean),
+    'guests' : required(GuestSchema, many=True),
+    'inviter': required(EmailAddressSchema)
 })
 PartyCodec: JsonCodec[Party] = codec(PartySchema(strict=True))
 
@@ -51,7 +52,7 @@ PhoneCodec: JsonCodec[Phone] = codec(PhoneSchema(strict=True))
 
 Contact, ContactSchema = build('Contact', {
     'phone': required(PhoneSchema),
-    'email': required(EmailSchema)
+    'email': required(EmailAddressSchema)
 })
 ContactCodec: JsonCodec[Contact] = codec(ContactSchema(strict=True))
 

@@ -1,7 +1,7 @@
 from typing import Optional
 
 from wedding.general.functional import option
-from wedding.model import Guest, Email, Party
+from wedding.model import Guest, EmailAddress, Party
 
 
 def guest(first_name: str, maybe_username: Optional[str] = None) -> Guest:
@@ -10,7 +10,7 @@ def guest(first_name: str, maybe_username: Optional[str] = None) -> Guest:
         first_name = first_name,
         last_name = 'Doe',
         email = option.fmap(lambda username:
-            Email(
+            EmailAddress(
                 username = username,
                 hostname = 'doe.com'
             )
