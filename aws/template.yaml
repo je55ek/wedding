@@ -575,341 +575,280 @@ Resources:
                 type: aws_proxy
                 uri: !Sub >-
                   arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Passengers.Arn}/invocations
-                responses:
-                  "default":
-                    statusCode: "200"
-                    responseParameters:
-                      method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
-                      method.response.header.Access-Control-Allow-Methods : "'*'"
-                      method.response.header.Access-Control-Allow-Origin : "'*'"
-              responses:
-                 "default":
-                  description: Default response for CORS method
-                  headers:
-                    Access-Control-Allow-Headers:
-                      type: "string"
-                    Access-Control-Allow-Methods:
-                      type: "string"
-                    Access-Control-Allow-Origin:
-                      type: "string"
+              responses: {}
             get:
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 type: aws_proxy
                 uri: !Sub >-
                   arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Passengers.Arn}/invocations
-                responses:
-                  "default":
-                    statusCode: "200"
-                    responseParameters:
-                      method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
-                      method.response.header.Access-Control-Allow-Methods : "'*'"
-                      method.response.header.Access-Control-Allow-Origin : "'*'"
               responses: {}
           /parties:
+            options:
+               summary: CORS support
+               consumes:
+                 - application/json
+               produces:
+                 - application/json
+               tags:
+                 - CORS
+               x-amazon-apigateway-integration:
+                 type: mock
+                 requestTemplates:
+                   application/json: |
+                     {
+                       "statusCode" : 200
+                     }
+                 responses:
+                   "default":
+                     statusCode: "200"
+                     responseParameters:
+                       method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+                       method.response.header.Access-Control-Allow-Methods : "'*'"
+                       method.response.header.Access-Control-Allow-Origin : "'*'"
+                     responseTemplates:
+                       application/json: |
+                         {}
+               responses:
+                 "default":
+                   headers:
+                     Access-Control-Allow-Headers:
+                       type: "string"
+                     Access-Control-Allow-Methods:
+                       type: "string"
+                     Access-Control-Allow-Origin:
+                       type: "string"
             post:
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 type: aws_proxy
                 uri: !Sub >-
                   arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Parties.Arn}/invocations
-                responses:
-                  "default":
-                    statusCode: "200"
-                    responseParameters:
-                      method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
-                      method.response.header.Access-Control-Allow-Methods : "'*'"
-                      method.response.header.Access-Control-Allow-Origin : "'*'"
-              responses:
-                "default":
-                  description: Default response for CORS method
-                  headers:
-                    Access-Control-Allow-Headers:
-                      type: "string"
-                    Access-Control-Allow-Methods:
-                      type: "string"
-                    Access-Control-Allow-Origin:
-                      type: "string"
+              responses: {}
             get:
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 type: aws_proxy
                 uri: !Sub >-
                   arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Parties.Arn}/invocations
-                responses:
-                  "default":
-                    statusCode: "200"
-                    responseParameters:
-                      method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
-                      method.response.header.Access-Control-Allow-Methods : "'*'"
-                      method.response.header.Access-Control-Allow-Origin : "'*'"
-              responses:
-                "default":
-                  description: Default response for CORS method
-                  headers:
-                    Access-Control-Allow-Headers:
-                      type: "string"
-                    Access-Control-Allow-Methods:
-                      type: "string"
-                    Access-Control-Allow-Origin:
-                      type: "string"
+              responses: {}
           /drivers:
+            options:
+               summary: CORS support
+               consumes:
+                 - application/json
+               produces:
+                 - application/json
+               tags:
+                 - CORS
+               x-amazon-apigateway-integration:
+                 type: mock
+                 requestTemplates:
+                   application/json: |
+                     {
+                       "statusCode" : 200
+                     }
+                 responses:
+                   "default":
+                     statusCode: "200"
+                     responseParameters:
+                       method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+                       method.response.header.Access-Control-Allow-Methods : "'*'"
+                       method.response.header.Access-Control-Allow-Origin : "'*'"
+                     responseTemplates:
+                       application/json: |
+                         {}
+               responses:
+                 "default":
+                   headers:
+                     Access-Control-Allow-Headers:
+                       type: "string"
+                     Access-Control-Allow-Methods:
+                       type: "string"
+                     Access-Control-Allow-Origin:
+                       type: "string"
             post:
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 type: aws_proxy
                 uri: !Sub >-
                   arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Drivers.Arn}/invocations
-                responses:
-                  "default":
-                    statusCode: "200"
-                    responseParameters:
-                      method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
-                      method.response.header.Access-Control-Allow-Methods : "'*'"
-                      method.response.header.Access-Control-Allow-Origin : "'*'"
-              responses:
-                "default":
-                  description: Default response for CORS method
-                  headers:
-                    Access-Control-Allow-Headers:
-                      type: "string"
-                    Access-Control-Allow-Methods:
-                      type: "string"
-                    Access-Control-Allow-Origin:
-                      type: "string"
+              responses: {}
             get:
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 type: aws_proxy
                 uri: !Sub >-
                   arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Drivers.Arn}/invocations
-                responses:
-                  "default":
-                    statusCode: "200"
-                    responseParameters:
-                      method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
-                      method.response.header.Access-Control-Allow-Methods : "'*'"
-                      method.response.header.Access-Control-Allow-Origin : "'*'"
-              responses:
-                "default":
-                  description: Default response for CORS method
-                  headers:
-                    Access-Control-Allow-Headers:
-                      type: "string"
-                    Access-Control-Allow-Methods:
-                      type: "string"
-                    Access-Control-Allow-Origin:
-                      type: "string"
+              responses: {}
           '/passengers/{id}':
+            options:
+               summary: CORS support
+               consumes:
+                 - application/json
+               produces:
+                 - application/json
+               tags:
+                 - CORS
+               x-amazon-apigateway-integration:
+                 type: mock
+                 requestTemplates:
+                   application/json: |
+                     {
+                       "statusCode" : 200
+                     }
+                 responses:
+                   "default":
+                     statusCode: "200"
+                     responseParameters:
+                       method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+                       method.response.header.Access-Control-Allow-Methods : "'*'"
+                       method.response.header.Access-Control-Allow-Origin : "'*'"
+                     responseTemplates:
+                       application/json: |
+                         {}
+               responses:
+                 "default":
+                   headers:
+                     Access-Control-Allow-Headers:
+                       type: "string"
+                     Access-Control-Allow-Methods:
+                       type: "string"
+                     Access-Control-Allow-Origin:
+                       type: "string"
             post:
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 type: aws_proxy
                 uri: !Sub >-
                   arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Passengers.Arn}/invocations
-                responses:
-                  "default":
-                    statusCode: "200"
-                    responseParameters:
-                      method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
-                      method.response.header.Access-Control-Allow-Methods : "'*'"
-                      method.response.header.Access-Control-Allow-Origin : "'*'"
-              responses:
-                "default":
-                  description: Default response for CORS method
-                  headers:
-                    Access-Control-Allow-Headers:
-                      type: "string"
-                    Access-Control-Allow-Methods:
-                      type: "string"
-                    Access-Control-Allow-Origin:
-                      type: "string"
+              responses: {}
             delete:
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 type: aws_proxy
                 uri: !Sub >-
                   arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Passengers.Arn}/invocations
-                responses:
-                  "default":
-                    statusCode: "200"
-                    responseParameters:
-                      method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
-                      method.response.header.Access-Control-Allow-Methods : "'*'"
-                      method.response.header.Access-Control-Allow-Origin : "'*'"
-              responses:
-                "default":
-                  description: Default response for CORS method
-                  headers:
-                    Access-Control-Allow-Headers:
-                      type: "string"
-                    Access-Control-Allow-Methods:
-                      type: "string"
-                    Access-Control-Allow-Origin:
-                      type: "string"
+              responses: {}
             get:
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 type: aws_proxy
                 uri: !Sub >-
                   arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Passengers.Arn}/invocations
-                responses:
-                  "default":
-                    statusCode: "200"
-                    responseParameters:
-                      method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
-                      method.response.header.Access-Control-Allow-Methods : "'*'"
-                      method.response.header.Access-Control-Allow-Origin : "'*'"
-              responses:
-                "default":
-                  description: Default response for CORS method
-                  headers:
-                    Access-Control-Allow-Headers:
-                      type: "string"
-                    Access-Control-Allow-Methods:
-                      type: "string"
-                    Access-Control-Allow-Origin:
-                      type: "string"
+              responses: {}
           '/drivers/{id}':
+            options:
+               summary: CORS support
+               consumes:
+                 - application/json
+               produces:
+                 - application/json
+               tags:
+                 - CORS
+               x-amazon-apigateway-integration:
+                 type: mock
+                 requestTemplates:
+                   application/json: |
+                     {
+                       "statusCode" : 200
+                     }
+                 responses:
+                   "default":
+                     statusCode: "200"
+                     responseParameters:
+                       method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+                       method.response.header.Access-Control-Allow-Methods : "'*'"
+                       method.response.header.Access-Control-Allow-Origin : "'*'"
+                     responseTemplates:
+                       application/json: |
+                         {}
+               responses:
+                 "default":
+                   headers:
+                     Access-Control-Allow-Headers:
+                       type: "string"
+                     Access-Control-Allow-Methods:
+                       type: "string"
+                     Access-Control-Allow-Origin:
+                       type: "string"
             post:
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 type: aws_proxy
                 uri: !Sub >-
                   arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Drivers.Arn}/invocations
-                responses:
-                  "default":
-                    statusCode: "200"
-                    responseParameters:
-                      method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
-                      method.response.header.Access-Control-Allow-Methods : "'*'"
-                      method.response.header.Access-Control-Allow-Origin : "'*'"
-              responses:
-                "default":
-                  description: Default response for CORS method
-                  headers:
-                    Access-Control-Allow-Headers:
-                      type: "string"
-                    Access-Control-Allow-Methods:
-                      type: "string"
-                    Access-Control-Allow-Origin:
-                      type: "string"
+              responses: {}
             get:
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 type: aws_proxy
                 uri: !Sub >-
                   arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Drivers.Arn}/invocations
-                responses:
-                  "default":
-                    statusCode: "200"
-                    responseParameters:
-                      method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
-                      method.response.header.Access-Control-Allow-Methods : "'*'"
-                      method.response.header.Access-Control-Allow-Origin : "'*'"
-              responses:
-                "default":
-                  description: Default response for CORS method
-                  headers:
-                    Access-Control-Allow-Headers:
-                      type: "string"
-                    Access-Control-Allow-Methods:
-                      type: "string"
-                    Access-Control-Allow-Origin:
-                      type: "string"
+              responses: {}
             delete:
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 type: aws_proxy
                 uri: !Sub >-
                   arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Drivers.Arn}/invocations
-                responses:
-                  "default":
-                    statusCode: "200"
-                    responseParameters:
-                      method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
-                      method.response.header.Access-Control-Allow-Methods : "'*'"
-                      method.response.header.Access-Control-Allow-Origin : "'*'"
-              responses:
-                "default":
-                  description: Default response for CORS method
-                  headers:
-                    Access-Control-Allow-Headers:
-                      type: "string"
-                    Access-Control-Allow-Methods:
-                      type: "string"
-                    Access-Control-Allow-Origin:
-                      type: "string"
+              responses: {}
           '/parties/{id}':
+            options:
+               summary: CORS support
+               consumes:
+                 - application/json
+               produces:
+                 - application/json
+               tags:
+                 - CORS
+               x-amazon-apigateway-integration:
+                 type: mock
+                 requestTemplates:
+                   application/json: |
+                     {
+                       "statusCode" : 200
+                     }
+                 responses:
+                   "default":
+                     statusCode: "200"
+                     responseParameters:
+                       method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+                       method.response.header.Access-Control-Allow-Methods : "'*'"
+                       method.response.header.Access-Control-Allow-Origin : "'*'"
+                     responseTemplates:
+                       application/json: |
+                         {}
+               responses:
+                 "default":
+                   headers:
+                     Access-Control-Allow-Headers:
+                       type: "string"
+                     Access-Control-Allow-Methods:
+                       type: "string"
+                     Access-Control-Allow-Origin:
+                       type: "string"
             post:
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 type: aws_proxy
                 uri: !Sub >-
                   arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Parties.Arn}/invocations
-                responses:
-                  "default":
-                    statusCode: "200"
-                    responseParameters:
-                      method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
-                      method.response.header.Access-Control-Allow-Methods : "'*'"
-                      method.response.header.Access-Control-Allow-Origin : "'*'"
-              responses:
-                "default":
-                  description: Default response for CORS method
-                  headers:
-                    Access-Control-Allow-Headers:
-                      type: "string"
-                    Access-Control-Allow-Methods:
-                      type: "string"
-                    Access-Control-Allow-Origin:
-                      type: "string"
+              responses: {}
             delete:
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 type: aws_proxy
                 uri: !Sub >-
                   arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Parties.Arn}/invocations
-                responses:
-                  "default":
-                    statusCode: "200"
-                    responseParameters:
-                      method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
-                      method.response.header.Access-Control-Allow-Methods : "'*'"
-                      method.response.header.Access-Control-Allow-Origin : "'*'"
-              responses:
-                "default":
-                  description: Default response for CORS method
-                  headers:
-                    Access-Control-Allow-Headers:
-                      type: "string"
-                    Access-Control-Allow-Methods:
-                      type: "string"
-                    Access-Control-Allow-Origin:
-                      type: "string"
+              responses: {}
             get:
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 type: aws_proxy
                 uri: !Sub >-
                   arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Parties.Arn}/invocations
-                responses:
-                  "default":
-                    statusCode: "200"
-                    responseParameters:
-                      method.response.header.Access-Control-Allow-Headers : "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
-                      method.response.header.Access-Control-Allow-Methods : "'*'"
-                      method.response.header.Access-Control-Allow-Origin : "'*'"
-              responses:
-                "default":
-                  description: Default response for CORS method
-                  headers:
-                    Access-Control-Allow-Headers:
-                      type: "string"
-                    Access-Control-Allow-Methods:
-                      type: "string"
-                    Access-Control-Allow-Origin:
-                      type: "string"
+              responses: {}
         swagger: '2.0'
   PartiesDeletePartyPermissionTest:
     Type: 'AWS::Lambda::Permission'
