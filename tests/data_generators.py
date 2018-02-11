@@ -16,7 +16,8 @@ def guest(first_name: str, maybe_username: Optional[str] = None) -> Guest:
             )
                             )(maybe_username),
         invited = False,
-        attending = False
+        attending = False,
+        local = True
     )
 
 

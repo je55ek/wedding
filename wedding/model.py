@@ -18,7 +18,8 @@ Guest, GuestSchema = build('Guest', {
     'last_name'  : required(String, 'lastName'),
     'email'      : optional(EmailSchema),
     'invited'    : required(Boolean),
-    'attending'  : required(Boolean)
+    'attending'  : optional(Boolean),
+    'local'      : required(Boolean)
 })
 GuestCodec: JsonCodec[Guest] = codec(GuestSchema(strict=True))
 
