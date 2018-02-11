@@ -50,7 +50,7 @@ parties_handler = \
 
 drivers_handler = \
     drivers_resource(
-        party_store(
+        driver_store(
             boto3.resource('dynamodb').Table(args.drivers_table)
         )
     ).create_handler()
@@ -58,7 +58,7 @@ drivers_handler = \
 
 passengers_handler = \
     passengers_resource(
-        party_store(
+        passenger_group_store(
             boto3.resource('dynamodb').Table(args.passengers_table)
         )
     ).create_handler()
