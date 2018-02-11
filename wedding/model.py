@@ -50,9 +50,10 @@ PhoneCodec: JsonCodec[Phone] = codec(PhoneSchema(strict=True))
 
 
 Contact, ContactSchema = build('Contact', {
-    'phone'     : required(PhoneSchema),
-    'email'     : required(EmailSchema)
+    'phone': required(PhoneSchema),
+    'email': required(EmailSchema)
 })
+ContactCodec: JsonCodec[Contact] = codec(ContactSchema(strict=True))
 
 
 PassengerGroup, PassengerGroupSchema = build('PassengerGroup', {
