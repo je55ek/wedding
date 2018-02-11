@@ -533,6 +533,11 @@ Resources:
         info:
           version: '1.0'
           title: !Ref 'AWS::StackName'
+        securityDefinitions:
+          api_key:
+            type: apiKey
+            name: x-api-key
+            in: header
         paths:
           /passengers:
             options:
@@ -561,7 +566,7 @@ Resources:
                        application/json: |
                          {}
                responses:
-                 "default":
+                 "200":
                    headers:
                      Access-Control-Allow-Headers:
                        type: "string"
@@ -610,7 +615,7 @@ Resources:
                        application/json: |
                          {}
                responses:
-                 "default":
+                 "200":
                    headers:
                      Access-Control-Allow-Headers:
                        type: "string"
@@ -659,7 +664,7 @@ Resources:
                        application/json: |
                          {}
                responses:
-                 "default":
+                 "200":
                    headers:
                      Access-Control-Allow-Headers:
                        type: "string"
@@ -708,7 +713,7 @@ Resources:
                        application/json: |
                          {}
                responses:
-                 "default":
+                 "200":
                    headers:
                      Access-Control-Allow-Headers:
                        type: "string"
@@ -764,7 +769,7 @@ Resources:
                        application/json: |
                          {}
                responses:
-                 "default":
+                 "200":
                    headers:
                      Access-Control-Allow-Headers:
                        type: "string"
@@ -820,7 +825,7 @@ Resources:
                        application/json: |
                          {}
                responses:
-                 "default":
+                 "200":
                    headers:
                      Access-Control-Allow-Headers:
                        type: "string"
