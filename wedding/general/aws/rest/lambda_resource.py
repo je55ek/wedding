@@ -84,7 +84,7 @@ class RestResource(Generic[_A]):
             }
         )
 
-        return merge(response, {'isBase64Encoded': False, 'headers': {}})
+        return merge(response, {'isBase64Encoded': False, 'headers': {'Access-Control-Allow-Origin': "*"}})
 
     def create_handler(self):
         return lambda event, _: self.__handle(event)
