@@ -56,10 +56,11 @@ Contact, ContactSchema = build('Contact', {
 
 
 PassengerGroup, PassengerGroupSchema = build('PassengerGroup', {
-    'id'        : required(String                    ),
-    'passengers': required(PassengerSchema, many=True),
-    'arrival'   : required(DateTime                  ),
-    'contact'   : required(ContactSchema,   many=True)
+    'id'          : required(String                    ),
+    'passengers'  : required(PassengerSchema, many=True),
+    'arrival'     : required(DateTime                  ),
+    'contact_name': required(String                    ),
+    'contact'     : required(ContactSchema,   many=True)
 })
 PassengerGroupCodec: JsonCodec[PassengerGroup] = codec(PassengerSchema(strict=True))
 
