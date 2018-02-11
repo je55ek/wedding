@@ -184,12 +184,12 @@ Resources:
           Properties:
             Path: /passengers
             Method: get
-        GetPassengers:
+        GetPassenger:
           Type: Api
           Properties:
             Path: /passengers/{id}
             Method: get
-        UpdatePassengers:
+        UpdatePassenger:
           Type: Api
           Properties:
             Path: /passengers/{id}
@@ -199,7 +199,7 @@ Resources:
           Properties:
             Path: /passengers
             Method: post
-        DeletePassengers:
+        DeletePassenger:
           Type: Api
           Properties:
             Path: /passengers/{id}
