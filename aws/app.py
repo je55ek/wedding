@@ -24,7 +24,7 @@ def argument_parser():
         env_var = 'PARTIES_TABLE'
     )
     parser.add_argument(
-        '--driver-table',
+        '--drivers-table',
         default = 'Drivers',
         env_var = 'DRIVERS_TABLE'
     )
