@@ -36,7 +36,7 @@ PartyCodec: JsonCodec[Party] = codec(PartySchema(strict=True))
 
 Passenger, PassengerSchema = build('Passenger', {
     'first_name': required(String, 'firstName'),
-    'guest_id'  : required(String)
+    'guest_id'  : required(String, 'guestId'  )
 })
 PassengerCodec: JsonCodec[Passenger] = codec(PassengerSchema(strict=True))
 
@@ -59,7 +59,7 @@ PassengerGroup, PassengerGroupSchema = build('PassengerGroup', {
     'id'          : required(String                    ),
     'passengers'  : required(PassengerSchema, many=True),
     'arrival'     : required(DateTime                  ),
-    'contact_name': required(String                    ),
+    'contact_name': required(String, 'contactName'     ),
     'contact'     : required(ContactSchema,   many=True)
 })
 PassengerGroupCodec: JsonCodec[PassengerGroup] = codec(PassengerSchema(strict=True))
