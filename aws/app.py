@@ -1,6 +1,7 @@
 from configargparse import ArgParser
 from wedding.general.resource import StoreBackedResource
 from wedding.model import *
+from wedding.rsvp import EnvelopeImageHandler
 import boto3
 
 
@@ -33,6 +34,11 @@ def argument_parser():
         default = 'Passengers',
         env_var = 'PASSENGERS_TABLE'
     )
+    parser.add_argument(
+        '--envelope-bucket',
+        env_var = 'ENVELOPE_BUCKET',
+        default = 'http://s3.amazonaws.com/flyingj-wedding-envelope-images/'
+    )
     return parser
 
 
@@ -51,7 +57,7 @@ parties_handler = \
 drivers_handler = \
     drivers_resource(
         driver_store(
-            boto3.resource('dynamodb').Table(args.drivers_table)
+            dynamo.Table(args.drivers_table)
         )
     ).create_handler()
 
@@ -59,6 +65,15 @@ drivers_handler = \
 passengers_handler = \
     passengers_resource(
         passenger_group_store(
-            boto3.resource('dynamodb').Table(args.passengers_table)
+            dynamo.Table(args.passengers_table)
+        )
+    ).create_handler()
+
+
+envelope_handler = \
+    EnvelopeImageHandler(
+        args.envelope_bucket,
+        party_store(
+            dynamo.Table(args.parties_table)
         )
     ).create_handler()
