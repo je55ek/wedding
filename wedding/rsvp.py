@@ -4,7 +4,7 @@ from wedding.model import PartyStore
 class EnvelopeImageHandler:
     def __init__(self,
                  envelope_bucket,
-                 parties: PartyStore):
+                 parties: PartyStore) -> None:
         self.__bucket  = envelope_bucket
         self.__parties = parties
 
