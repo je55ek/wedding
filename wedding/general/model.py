@@ -76,10 +76,12 @@ def optional(cls: Union[Type[Schema], Type[Field]],
         cls,
         name,
         **merge(
-            kwargs,
             {
                 'missing': None,
-                'default': None,
+                'default': None
+            },
+            kwargs,
+            {
                 'required': False
             }
         )
