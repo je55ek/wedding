@@ -1,8 +1,9 @@
+import boto3
 from configargparse import ArgParser
+
 from wedding.general.resource import StoreBackedResource
 from wedding.model import *
 from wedding.rsvp import EnvelopeImageHandler
-import boto3
 
 
 def parties_resource(store: PartyStore):

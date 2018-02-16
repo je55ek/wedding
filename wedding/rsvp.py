@@ -1,7 +1,6 @@
 import os.path
 
-from wedding.model import PartyStore
-from wedding.rsvp_stage import EmailOpened
+from wedding.model import PartyStore, EmailOpened
 
 
 class EnvelopeImageHandler:
