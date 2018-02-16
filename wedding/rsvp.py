@@ -1,4 +1,7 @@
+import os.path
+
 from wedding.model import PartyStore
+from wedding.rsvp_stage import EmailOpened
 
 
 class EnvelopeImageHandler:
@@ -9,15 +12,10 @@ class EnvelopeImageHandler:
         self.__parties = parties
 
     def __handle(self, event):
-        party_id = event['partyId'][0:-4]
+        party_id = os.path.splitext(event['partyId'])[0]
         self.__parties.modify(
             party_id,
-            lambda party: party._replace(
-                guests = [
-                    guest._replace(invited = True)
-                    for guest in party.guests
-                ]
-            )
+            lambda party: party._replace(rsvp_stage = EmailOpened)
         )
         return {
             'location': self.__bucket + f'{party_id}.png'
