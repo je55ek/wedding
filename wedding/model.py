@@ -2,10 +2,10 @@ from marshmallow.fields import String, Boolean, Integer, DateTime
 from marshmallow.validate import Range
 from toolz.functoolz import excepts
 
+from wedding.general.aws.dynamodb import DynamoDbStore
 from wedding.general.model import JsonCodec, codec, required, optional, build, JsonEncoder
 from wedding.general.store import Store
-from wedding.general.aws.dynamodb import DynamoDbStore
-
+from wedding.rsvp_stage import RsvpStageField, NotInvited
 
 EmailAddress, EmailAddressSchema = build('EmailAddress', {
     'username': required(String),
@@ -19,18 +19,17 @@ Guest, GuestSchema = build('Guest', {
     'first_name' : required(String, 'firstName'),
     'last_name'  : required(String, 'lastName'),
     'email'      : optional(EmailAddressSchema),
-    'invited'    : required(Boolean),
     'attending'  : optional(Boolean)
 })
 GuestCodec: JsonCodec[Guest] = codec(GuestSchema(strict=True))
 
-
 Party, PartySchema = build('Party', {
-    'id'     : required(String),
-    'title'  : required(String),
-    'local'  : required(Boolean),
-    'guests' : required(GuestSchema, many=True),
-    'inviter': required(EmailAddressSchema)
+    'id'        : required(String),
+    'title'     : required(String),
+    'local'     : required(Boolean),
+    'guests'    : required(GuestSchema, many=True),
+    'inviter'   : required(EmailAddressSchema),
+    'rsvp_stage': optional(RsvpStageField, 'rsvpStage', missing = NotInvited.shows)
 })
 PartyCodec: JsonCodec[Party] = codec(PartySchema(strict=True))
 

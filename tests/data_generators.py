@@ -2,6 +2,7 @@ from typing import Optional
 
 from wedding.general.functional import option
 from wedding.model import Guest, EmailAddress, Party
+from wedding.rsvp_stage import NotInvited
 
 
 def guest(first_name: str, maybe_username: Optional[str] = None) -> Guest:
@@ -14,10 +15,8 @@ def guest(first_name: str, maybe_username: Optional[str] = None) -> Guest:
                 username = username,
                 hostname = 'doe.com'
             )
-                            )(maybe_username),
-        invited = False,
-        attending = False,
-        local = True
+        )(maybe_username),
+        attending = False
     )
 
 
@@ -25,5 +24,8 @@ def create_party(id: str, *guests) -> Party:
     return Party(
         id = id,
         title = 'Some Family',
-        guests = list(guests)
+        guests = list(guests),
+        local = True,
+        inviter = EmailAddress('inviter', 'inviting.rocks'),
+        rsvp_stage = NotInvited
     )
