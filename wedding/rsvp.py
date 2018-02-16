@@ -5,9 +5,15 @@ from wedding.model import PartyStore, EmailOpened
 
 class EnvelopeImageHandler:
     def __init__(self,
-                 envelope_bucket,
+                 envelope_url_prefix: str,
                  parties: PartyStore) -> None:
-        self.__bucket  = envelope_bucket
+        """Create a new instance of the :obj:`EnvelopeImageHandler` class.
+
+        Args:
+            envelope_url_prefix: The URL prefix of all envelope PNG images.
+            parties: Store for :obj:`Party` instances.
+        """
+        self.__prefix  = envelope_url_prefix
         self.__parties = parties
 
     def __handle(self, event):
@@ -17,7 +23,7 @@ class EnvelopeImageHandler:
             lambda party: party._replace(rsvp_stage = EmailOpened)
         )
         return {
-            'location': self.__bucket + f'{party_id}.png'
+            'location': self.__prefix + f'{party_id}.png'
         }
 
     def create_handler(self):
