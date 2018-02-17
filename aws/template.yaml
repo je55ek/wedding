@@ -702,6 +702,8 @@ Resources:
                      Access-Control-Allow-Origin:
                        type: "string"
             post:
+              security:
+              - api_key: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 type: aws_proxy
@@ -709,6 +711,8 @@ Resources:
                   arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Passengers.Arn}/invocations
               responses: {}
             get:
+              security:
+              - api_key: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 type: aws_proxy
@@ -751,6 +755,8 @@ Resources:
                      Access-Control-Allow-Origin:
                        type: "string"
             post:
+              security:
+              - api_key: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 type: aws_proxy
@@ -758,6 +764,8 @@ Resources:
                   arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Parties.Arn}/invocations
               responses: {}
             get:
+              security:
+              - api_key: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 type: aws_proxy
@@ -800,6 +808,8 @@ Resources:
                      Access-Control-Allow-Origin:
                        type: "string"
             post:
+              security:
+              - api_key: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 type: aws_proxy
@@ -807,6 +817,8 @@ Resources:
                   arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Drivers.Arn}/invocations
               responses: {}
             get:
+              security:
+              - api_key: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 type: aws_proxy
@@ -849,6 +861,8 @@ Resources:
                      Access-Control-Allow-Origin:
                        type: "string"
             post:
+              security:
+              - api_key: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 type: aws_proxy
@@ -856,6 +870,8 @@ Resources:
                   arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Passengers.Arn}/invocations
               responses: {}
             delete:
+              security:
+              - api_key: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 type: aws_proxy
@@ -863,6 +879,8 @@ Resources:
                   arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Passengers.Arn}/invocations
               responses: {}
             get:
+              security:
+              - api_key: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 type: aws_proxy
@@ -905,6 +923,8 @@ Resources:
                      Access-Control-Allow-Origin:
                        type: "string"
             post:
+              security:
+              - api_key: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 type: aws_proxy
@@ -912,6 +932,8 @@ Resources:
                   arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Drivers.Arn}/invocations
               responses: {}
             get:
+              security:
+              - api_key: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 type: aws_proxy
@@ -919,6 +941,8 @@ Resources:
                   arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Drivers.Arn}/invocations
               responses: {}
             delete:
+              security:
+              - api_key: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 type: aws_proxy
@@ -961,6 +985,8 @@ Resources:
                      Access-Control-Allow-Origin:
                        type: "string"
             post:
+              security:
+              - api_key: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 type: aws_proxy
@@ -968,6 +994,8 @@ Resources:
                   arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Parties.Arn}/invocations
               responses: {}
             delete:
+              security:
+              - api_key: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 type: aws_proxy
@@ -975,6 +1003,8 @@ Resources:
                   arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Parties.Arn}/invocations
               responses: {}
             get:
+              security:
+              - api_key: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 type: aws_proxy
@@ -1162,4 +1192,9 @@ Resources:
                     \"rideshare\": \"$input.params('rideshare')\"\n}"
                 contentHandling: "CONVERT_TO_TEXT"
                 type: "aws"
+        securityDefinitions:
+          api_key:
+            type: "apiKey"
+            name: "x-api-key"
+            in: "header"
         swagger: '2.0'
