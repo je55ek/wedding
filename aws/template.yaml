@@ -69,6 +69,23 @@ Resources:
         - InvitationsRole
         - Arn
       Runtime: python3.6
+  Rsvp:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Code:
+        S3Bucket: !Ref BucketName
+        S3Key: !Ref CodeKey
+      Tags:
+        - Value: wedding
+          Key: project
+      Environment:
+        Variables:
+          PARTIES_TABLE: !Ref PartiesTable
+      Handler: app.rsvp_handler
+      Role: !GetAtt
+        - RsvpRole
+        - Arn
+      Runtime: python3.6
   DriversDeleteDriverPermissionTest:
     Type: 'AWS::Lambda::Permission'
     Properties:
@@ -191,6 +208,50 @@ Resources:
         - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
       Policies:
         - PolicyName: InvitationsRolePolicy0
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Action:
+                  - 'dynamodb:BatchGetItem'
+                  - 'dynamodb:BatchWriteItem'
+                  - 'dynamodb:PutItem'
+                  - 'dynamodb:DeleteItem'
+                  - 'dynamodb:Scan'
+                  - 'dynamodb:Query'
+                  - 'dynamodb:UpdateItem'
+                  - 'dynamodb:CreateTable'
+                  - 'dynamodb:DescribeTable'
+                  - 'dynamodb:GetShardIterator'
+                  - 'dynamodb:GetItem'
+                  - 'dynamodb:UpdateTable'
+                  - 'dynamodb:GetRecords'
+                Resource: !GetAtt
+                  - PartiesTable
+                  - Arn
+                Effect: Allow
+              - Action:
+                  - 's3:GetObject'
+                Resource: !Sub
+                  - >-
+                    arn:aws:s3:::${__BucketName__}/*
+                  - __BucketName__: !Ref TemplateBucket
+                Effect: Allow
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action:
+              - 'sts:AssumeRole'
+            Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+  RsvpRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+      Policies:
+        - PolicyName: RsvpRolePolicy0
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -1106,6 +1167,45 @@ Resources:
                     \n}"
                 contentHandling: "CONVERT_TO_TEXT"
                 type: "aws"
+          '/rsvp':
+            get:
+              consumes:
+              - "application/json"
+              produces:
+              - "text/html"
+              parameters:
+              - name: "party"
+                in: "query"
+                required: false
+                type: "string"
+              - name: "guest"
+                in: "query"
+                required: false
+                type: "string"
+              responses:
+                "200":
+                  description: "200 response"
+                  headers:
+                    Content-Type:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                responses:
+                  "default":
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Content-Type: "'text/html'"
+                    responseTemplates:
+                      text/html: "$input.path('$').body"
+                uri: !Sub >-
+                  arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Rsvp.Arn}/invocations
+                passthroughBehavior: "when_no_templates"
+                httpMethod: "POST"
+                requestTemplates:
+                  application/json: "#set($inputRoot = $input.path('$'))\n{\n    \"partyId\": \"\
+                    $input.params('party')\",\n    \"guestId\": \"$input.params('guest')\"\
+                    \n}"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws"
         swagger: '2.0'
   InvitationsGetInvitationPermissionTest:
     Type: 'AWS::Lambda::Permission'
@@ -1127,6 +1227,28 @@ Resources:
       SourceArn: !Sub 
         - >-
           arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${__ApiId__}/${__Stage__}/GET/invitation
+        - __Stage__: Prod
+          __ApiId__: !Ref ServerlessRestApi
+  RsvpGetRsvpPermissionTest:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:invokeFunction'
+      Principal: apigateway.amazonaws.com
+      FunctionName: !Ref Rsvp
+      SourceArn: !Sub
+        - >-
+          arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${__ApiId__}/${__Stage__}/GET/rsvp
+        - __Stage__: '*'
+          __ApiId__: !Ref ServerlessRestApi
+  RsvpGetRsvpPermissionProd:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:invokeFunction'
+      Principal: apigateway.amazonaws.com
+      FunctionName: !Ref Rsvp
+      SourceArn: !Sub
+        - >-
+          arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${__ApiId__}/${__Stage__}/GET/rsvp
         - __Stage__: Prod
           __ApiId__: !Ref ServerlessRestApi
   PartiesDeletePartyPermissionTest:
