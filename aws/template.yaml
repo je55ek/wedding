@@ -1067,7 +1067,47 @@ Resources:
                   application/json: "#set($inputRoot = $input.path('$'))\n{\n  \"partyId\": \"$input.params('id')\"\n}"
                 contentHandling: CONVERT_TO_TEXT
                 type: aws
+          '/invitation':
+            get:
+              responses:
+                "200":
+                  description: "Invitation page"
+              x-amazon-apigateway-integration:
+                responses:
+                  "default":
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.body: "integration.response.body"
+                uri: !Sub >-
+                  arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Invitations.Arn}/invocations
+                passthroughBehavior: when_no_templates
+                httpMethod: POST
+                requestTemplates:
+                  text/html: "#set($inputRoot = $input.path('$'))\n{\n  \"partyId\": \"$input.params('party')\"\n}"
+                type: aws
         swagger: '2.0'
+  InvitationsGetInvitationPermissionTest:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:invokeFunction'
+      Principal: apigateway.amazonaws.com
+      FunctionName: !Ref Invitations
+      SourceArn: !Sub 
+        - >-
+          arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${__ApiId__}/${__Stage__}/GET/invitation
+        - __Stage__: '*'
+          __ApiId__: !Ref ServerlessRestApi
+  InvitationsGetInvitationPermissionProd:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:invokeFunction'
+      Principal: apigateway.amazonaws.com
+      FunctionName: !Ref Invitations
+      SourceArn: !Sub 
+        - >-
+          arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${__ApiId__}/${__Stage__}/GET/invitation
+        - __Stage__: Prod
+          __ApiId__: !Ref ServerlessRestApi
   PartiesDeletePartyPermissionTest:
     Type: 'AWS::Lambda::Permission'
     Properties:
