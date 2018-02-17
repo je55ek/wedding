@@ -66,7 +66,7 @@ class InternalServerError(HttpResponse):
     def status_code(self):
         return 500
 
-    def __init__(self, message: Optional[str]):
+    def __init__(self, message: Optional[str]) -> None:
         super().__init__(
             option.cata(
                 '{{ "message": "{}" }}'.format,
