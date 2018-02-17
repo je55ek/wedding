@@ -1095,7 +1095,7 @@ Resources:
                     responseParameters:
                       method.response.header.Content-Type: "'text/html'"
                     responseTemplates:
-                      text/html: "$input.json('$.body')"
+                      text/html: "$input.path('$').body"
                 uri: !Sub >-
                   arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Invitations.Arn}/invocations
                 passthroughBehavior: "when_no_templates"
