@@ -23,7 +23,7 @@ all: packages
 static:
 	aws s3 cp --recursive $(TEMPLATES) s3://$(TEMPLATE_BUCKET)/
 
-deploy: all static
+deploy: clean all static
 	aws s3 mv $(ZIPNAME) s3://$(CODE_BUCKET)/$(ZIPNAME); \
   aws cloudformation deploy \
     --template-file $(CLOUDFORMATION_TEMPLATE) \
