@@ -1,1 +1,1 @@
-from .lambda_resource import RestResource
+from .lambda_resource import RestResource, LambdaHandler

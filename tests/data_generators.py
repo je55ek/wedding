@@ -15,7 +15,8 @@ def guest(first_name: str, maybe_username: Optional[str] = None) -> Guest:
                 hostname = 'doe.com'
             )
         )(maybe_username),
-        attending = False
+        attending = False,
+        rideshare = True
     )
 
 

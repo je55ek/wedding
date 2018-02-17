@@ -1,4 +1,5 @@
 import json
+from abc import ABC, abstractmethod
 from typing import Generic, TypeVar, Union, Optional, Iterable
 
 from marshmallow.exceptions import MarshmallowError
@@ -13,7 +14,16 @@ from wedding.general.functional import option
 _A = TypeVar('_A')
 
 
-class RestResource(Generic[_A]):
+class LambdaHandler(ABC):
+    @abstractmethod
+    def _handle(self, event):
+        pass
+
+    def create_handler(self):
+        return lambda event, _: self._handle(event)
+
+
+class RestResource(Generic[_A], LambdaHandler):
     METHOD_FIELD = 'httpMethod'
     QUERY_FIELD = 'queryStringParameters'
     PATH_FIELD = 'pathParameters'
@@ -65,7 +75,7 @@ class RestResource(Generic[_A]):
     def __handler(exc, handler):
         return lambda f: excepts(exc, f, handler)
 
-    def __handle(self, event):
+    def _handle(self, event):
         safe_route = compose(
             self.__handler(Exception       , self.__internal_error),
             self.__handler(MarshmallowError, self.__json_error    )
@@ -85,9 +95,6 @@ class RestResource(Generic[_A]):
         )
 
         return merge(response, {'isBase64Encoded': False, 'headers': {'Access-Control-Allow-Origin': "*"}})
-
-    def create_handler(self):
-        return lambda event, _: self.__handle(event)
 
     def _get(self, key: str) -> Union[Optional[_A], HttpResponse]:
         return NotFound()

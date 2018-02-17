@@ -6,10 +6,7 @@ from wedding.general.functional import option
 
 class HttpResponse(ABC):
     def __init__(self, body: Optional[str] = None) -> None:
-        self.__body = option.cata(
-            '{{ "message": "{}" }}'.format,
-            lambda: ''
-        )(body)
+        self.__body = body or ''
 
     @property
     @abstractmethod
@@ -26,6 +23,12 @@ class HttpResponse(ABC):
             'body': self.body,
             'isBase64Encoded': False
         }
+
+
+class Ok(HttpResponse):
+    @property
+    def status_code(self):
+        return 200
 
 
 class Created(HttpResponse):
@@ -63,5 +66,19 @@ class InternalServerError(HttpResponse):
     def status_code(self):
         return 500
 
-    def __init__(self, message):
-        super().__init__(message)
+    def __init__(self, message: Optional[str]):
+        super().__init__(
+            option.cata(
+                '{{ "message": "{}" }}'.format,
+                lambda: ''
+            )(message)
+        )
+
+
+class TemporaryRedirect(HttpResponse):
+    def __init__(self, to_url: str) -> None:
+        super().__init__(to_url)
+
+    @property
+    def status_code(self):
+        return 302

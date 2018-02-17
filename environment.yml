@@ -12,3 +12,4 @@ dependencies:
 - pip:
   - awscli==1.14.32
   - marshmallow==2.15.0
+  - pystache==0.5.4

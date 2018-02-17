@@ -29,7 +29,7 @@ def test_get_all():
                 None
             )['body']
         )['items'],
-        key = lambda party: party['guests'][0]['firstName']
+        key = lambda party: party['id']
     )
     for party in parties:
         store.delete(party.id)

@@ -23,20 +23,12 @@ class RsvpStage(ABC):
     def shows(self) -> str:
         pass
 
-    @property
-    @abstractmethod
-    def next_stage(self):
-        pass
-
     @staticmethod
-    def instance(name: str, shows: str, next_stage):
+    def instance(name: str, shows: str):
         return type(
             f'_{name}',
             (RsvpStage,),
-            {
-                'shows'     : property(lambda _: shows),
-                'next_stage': property(lambda _: next_stage)
-            }
+            { 'shows': property(lambda _: shows) }
         )()
 
 
@@ -58,11 +50,11 @@ class RsvpStageField(Field):
         )
 
 
-RsvpSubmitted = RsvpStage.instance('RsvpSubmitted', 'rsvp_submitted', None         )
-CardClicked   = RsvpStage.instance('CardClicked'  , 'card_clicked'  , RsvpSubmitted)
-EmailOpened   = RsvpStage.instance('EmailOpened'  , 'email_opened'  , CardClicked  )
-EmailSent     = RsvpStage.instance('EmailSent'    , 'email_sent'    , EmailOpened  )
-NotInvited    = RsvpStage.instance('NotInvited'   , 'not_invited'   , EmailSent    )
+RsvpSubmitted = RsvpStage.instance('RsvpSubmitted', 'rsvp_submitted')
+CardClicked   = RsvpStage.instance('CardClicked'  , 'card_clicked'  )
+EmailOpened   = RsvpStage.instance('EmailOpened'  , 'email_opened'  )
+EmailSent     = RsvpStage.instance('EmailSent'    , 'email_sent'    )
+NotInvited    = RsvpStage.instance('NotInvited'   , 'not_invited'   )
 
 
 EmailAddress, EmailAddressSchema = build('EmailAddress', {
@@ -77,7 +69,8 @@ Guest, GuestSchema = build('Guest', {
     'first_name' : required(String, 'firstName'),
     'last_name'  : required(String, 'lastName'),
     'email'      : optional(EmailAddressSchema),
-    'attending'  : optional(Boolean)
+    'attending'  : optional(Boolean),
+    'rideshare'  : optional(Boolean)
 })
 GuestCodec: JsonCodec[Guest] = codec(GuestSchema(strict=True))
 
