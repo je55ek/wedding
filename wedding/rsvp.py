@@ -5,6 +5,7 @@ from typing import Callable, Optional, Any, Dict
 import pystache
 from toolz.dicttoolz import assoc
 from toolz.itertoolz import first
+from toolz.functoolz import partial
 
 from wedding.general.aws.rest import LambdaHandler
 from wedding.general.aws.rest.responses import TemporaryRedirect, HttpResponse, Ok
@@ -113,15 +114,17 @@ class RsvpHandler(LambdaHandler):
         )
 
     def __get_rideshare(self,
-                        guest_id: str,
-                        party: Party) -> Optional[bool]:
+                        party: Party,
+                        guest_id: str) -> Optional[bool]:
         try:
             return first(guest.rideshare for guest in party.guests if guest.id == guest_id)
         except StopIteration:
             self.__logger.error(f'Guest {guest_id} not found in party {party.id}')
             return False
 
-    def __rsvp_context(self, guest_id: str, party: Party) -> Dict[str, Any]:
+    def __rsvp_context(self,
+                       party: Party,
+                       guest_id: str) -> Dict[str, Any]:
         return {
             'partyId': party.id,
             'guestId': guest_id,
@@ -137,27 +140,29 @@ class RsvpHandler(LambdaHandler):
             ]
         }
 
-    def __summary_context(self, guest_id: str, party: Party) -> Dict[str, Any]:
+    def __summary_context(self,
+                          party: Party,
+                          guest_id: str) -> Dict[str, Any]:
         return assoc(
-            self.__rsvp_context(guest_id, party),
+            self.__rsvp_context(party, guest_id),
             'rideshare',
-            self.__get_rideshare(guest_id, party)
+            self.__get_rideshare(party, guest_id)
         )
 
     def _handle(self, event):
-        party_id = event['partyId']
-        guest_id = event['guestId']
+        party_id: str = event['partyId']
+        guest_id: str = event['guestId']
 
         maybe_get_context, get_template = option.fmap(
             lambda party:
-                (self.__summary_context, self.__summary_template) if party.rsvp_stage == RsvpSubmitted else
-                (self.__rsvp_context   , self.__rsvp_template   )
+                (partial(self.__summary_context, party), self.__summary_template) if party.rsvp_stage == RsvpSubmitted else
+                (partial(self.__rsvp_context   , party), self.__rsvp_template   )
         )(self.__parties.get(party_id))
 
         return option.cata(
             lambda get_context: self.__render(
                 get_template(),
-                get_context(guest_id, party_id)
+                get_context(guest_id)
             ),
             lambda: self.__redirect
         )(maybe_get_context).as_json()
