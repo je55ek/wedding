@@ -1280,7 +1280,7 @@ Resources:
                     responseTemplates:
                       text/html: "$input.path('$').body"
                 uri: !Sub >-
-                  arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Rsvp.Arn}/invocations
+                  arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Rideshare.Arn}/invocations
                 passthroughBehavior: "when_no_templates"
                 httpMethod: "POST"
                 requestTemplates:
