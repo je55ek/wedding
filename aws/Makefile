@@ -21,7 +21,7 @@ all: packages
 		mv $(BUILDDIR)/$(ZIPNAME) ./
 
 static:
-	aws s3 mv --recursive $(TEMPLATES) s3://$(TEMPLATE_BUCKET)/
+	aws s3 cp --recursive $(TEMPLATES) s3://$(TEMPLATE_BUCKET)/
 
 deploy: all static
 	aws s3 mv $(ZIPNAME) s3://$(CODE_BUCKET)/$(ZIPNAME); \
