@@ -1070,7 +1070,7 @@ Resources:
           '/invitation':
             get:
               consumes:
-              - "text/html"
+              - "application/json"
               produces:
               - "text/html"
               parameters:
@@ -1101,7 +1101,7 @@ Resources:
                 passthroughBehavior: "when_no_templates"
                 httpMethod: "POST"
                 requestTemplates:
-                  text/html: "#set($inputRoot = $input.path('$'))\n{\n    \"partyId\": \"\
+                  application/json: "#set($inputRoot = $input.path('$'))\n{\n    \"partyId\": \"\
                     $input.params('party')\",\n    \"guestId\": \"$input.params('guest')\"\
                     \n}"
                 contentHandling: "CONVERT_TO_TEXT"
