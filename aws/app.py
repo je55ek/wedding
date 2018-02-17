@@ -78,7 +78,11 @@ def argument_parser():
         default = 'rsvp_summary_template.html',
         help    = 'S3 key of the rsvp summary template'
     )
-
+    parser.add_argument(
+        '--not-found-url',
+        env_var = 'NOT_FOUND_URL',
+        default = 'http://www.flyingjs4.life/404.html'
+    )
     parser.add_argument(
         '--verbosity',
         env_var = 'VERBOSITY',
@@ -91,7 +95,8 @@ def argument_parser():
 
 args   = argument_parser().parse_args()
 dynamo = boto3.resource('dynamodb')
-logger = logging.basicConfig(level = args.verbosity)
+logging.basicConfig(level = args.verbosity)
+logger = logging.getLogger()
 logger.debug('New lambda instance initialized')
 
 
