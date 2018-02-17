@@ -216,7 +216,7 @@ Resources:
                   - 's3:GetObject'
                 Resource: !Sub
                   - >-
-                    arn:aws:s3:::${__BucketName__}
+                    arn:aws:s3:::${__BucketName__}/*
                   - __BucketName__: !Ref TemplateBucket
                 Effect: Allow
       AssumeRolePolicyDocument:
