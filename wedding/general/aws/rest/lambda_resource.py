@@ -19,8 +19,8 @@ class LambdaHandler(ABC):
     def _handle(self, event):
         pass
 
-    def create_handler(self):
-        return lambda event, _: self._handle(event)
+    def __call__(self, event, context):
+        return self._handle(event)
 
 
 class RestResource(Generic[_A], LambdaHandler):

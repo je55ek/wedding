@@ -119,16 +119,16 @@ driver_store          = model.driver_store         (dynamo.Table(args.drivers_ta
 passenger_group_store = model.passenger_group_store(dynamo.Table(args.passengers_table))
 
 
-parties_handler    = parties_resource   (party_store          ).create_handler()
-drivers_handler    = drivers_resource   (driver_store         ).create_handler()
-passengers_handler = passengers_resource(passenger_group_store).create_handler()
+parties_handler    = parties_resource   (party_store          )
+drivers_handler    = drivers_resource   (driver_store         )
+passengers_handler = passengers_resource(passenger_group_store)
 
 
 envelope_handler = \
     rsvp.EnvelopeImageHandler(
         args.envelope_bucket,
         party_store
-    ).create_handler()
+    )
 
 
 invitation_handler = \

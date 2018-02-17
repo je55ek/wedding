@@ -17,14 +17,13 @@ parties = [
     create_party('1', guest('Jim'), guest('Jane')),
     create_party('2', guest('Jam'), guest('John'))
 ]
-handler = parties_rest.create_handler()
 
 
 def test_get_all():
     store.put_all(parties)
     response = sorted(
         json.loads(
-            handler(
+            parties_rest(
                 { parties_rest.METHOD_FIELD: 'GET' },
                 None
             )['body']
@@ -39,7 +38,7 @@ def test_get_all():
 
 def test_get_one():
     store.put_all(parties)
-    response = handler(
+    response = parties_rest(
         { parties_rest.METHOD_FIELD: 'GET', parties_rest.PATH_FIELD: { 'id': parties[0].id } },
         None
     )
