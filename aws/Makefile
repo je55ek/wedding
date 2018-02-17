@@ -2,7 +2,9 @@ BUILDDIR := build
 VERSION := $(shell git describe --long --dirty --always)
 ZIPNAME := wedding-app-$(VERSION).zip
 CODE_BUCKET := flyingj-code-dev
-TEMPLATE := template.yaml
+TEMPLATE_BUCKET := flyingj-wedding/templates
+TEMPLATES := resources/templates
+CLOUDFORMATION_TEMPLATE := template.yaml
 STACK_NAME := wedding
 AWS_TAGS := "project=wedding"
 
@@ -18,10 +20,13 @@ all: packages
 		cd ../ ;\
 		mv $(BUILDDIR)/$(ZIPNAME) ./
 
-deploy: all
+static:
+	aws s3 mv --recursive $(TEMPLATES) s3://$(TEMPLATE_BUCKET)/
+
+deploy: all static
 	aws s3 mv $(ZIPNAME) s3://$(CODE_BUCKET)/$(ZIPNAME); \
   aws cloudformation deploy \
-    --template-file $(TEMPLATE) \
+    --template-file $(CLOUDFORMATION_TEMPLATE) \
     --stack-name $(STACK_NAME) \
     --tags $(AWS_TAGS) \
     --parameter-overrides "CodeKey=$(ZIPNAME)" "CodeBucket=$(CODE_BUCKET)" \
