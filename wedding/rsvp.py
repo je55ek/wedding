@@ -16,6 +16,10 @@ from wedding.model import PartyStore, EmailOpened, Party, CardClicked, RsvpSubmi
 TemplateResolver = Callable[[], str]
 
 
+def _parse_bool(s: str) -> bool:
+    return s.lower() == 'true'
+
+
 class EnvelopeImageHandler(LambdaHandler):
     def __init__(self,
                  envelope_url_prefix: str,
@@ -183,9 +187,9 @@ class RideShareHandler(LambdaHandler):
         self.__out_of_town_template = out_of_town_template
 
     def _handle(self, event):
-        local     = event['local'  ]
+        local     = _parse_bool(event['local'])
         guest_id  = event['guestId']
-        rideshare = event.get('rideshare')
+        rideshare = option.fmap(_parse_bool)(event.get('rideshare'))
 
         return Ok(
             pystache.render(
