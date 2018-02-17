@@ -10,7 +10,8 @@ setup(
       install_requires = [
           'toolz == 0.9.0',
           'marshmallow == 2.15.0',
-          'configargparse == 0.12.0'
+          'configargparse == 0.12.0',
+          'pystache == 0.5.4'
       ],
       tests_require = [
           'pytest == 3.3.2'
