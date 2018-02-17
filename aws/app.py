@@ -141,7 +141,7 @@ invitation_handler = \
 
 rsvp_handler = \
     rsvp.RsvpHandler(
-        lambda: get_template(args.invitation_template),
+        lambda: get_template(args.rsvp_template),
         lambda: get_template(args.rsvp_summary_template),
         args.not_found_url,
         party_store,
