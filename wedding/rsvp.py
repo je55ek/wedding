@@ -78,7 +78,7 @@ class InvitationHandler(LambdaHandler):
         return option.cata(
             lambda party: self.__render_invitation(guest_id, party),
             lambda: self.__redirect
-        )(self.__parties.get(party_id))
+        )(self.__parties.get(party_id)).as_json()
 
 
 class RsvpHandler(LambdaHandler):
@@ -160,7 +160,7 @@ class RsvpHandler(LambdaHandler):
                 get_context(guest_id, party_id)
             ),
             lambda: self.__redirect
-        )(maybe_get_context)
+        )(maybe_get_context).as_json()
 
 
 class RideShareHandler(LambdaHandler):
@@ -190,4 +190,4 @@ class RideShareHandler(LambdaHandler):
                     'rideshare': rideshare
                 }
             )
-        )
+        ).as_json()
