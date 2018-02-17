@@ -1067,7 +1067,7 @@ Resources:
                   application/json: "#set($inputRoot = $input.path('$'))\n{\n  \"partyId\": \"$input.params('id')\"\n}"
                 contentHandling: CONVERT_TO_TEXT
                 type: aws
-          '/invitations':
+          '/invitation':
             get:
               consumes:
               - "text/html"
