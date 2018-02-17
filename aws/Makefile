@@ -1,5 +1,5 @@
 BUILDDIR := build
-VERSION := $(shell git describe --long --dirty)
+VERSION := $(shell git describe --long --dirty --always)
 ZIPNAME := wedding-app-$(VERSION).zip
 CODE_BUCKET := flyingj-code-dev
 TEMPLATE := template.yaml
