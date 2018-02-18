@@ -366,6 +366,24 @@ Resources:
             Version: 2012-10-17
             Statement:
               - Action:
+                  - 'dynamodb:BatchGetItem'
+                  - 'dynamodb:BatchWriteItem'
+                  - 'dynamodb:PutItem'
+                  - 'dynamodb:DeleteItem'
+                  - 'dynamodb:Scan'
+                  - 'dynamodb:Query'
+                  - 'dynamodb:UpdateItem'
+                  - 'dynamodb:CreateTable'
+                  - 'dynamodb:DescribeTable'
+                  - 'dynamodb:GetShardIterator'
+                  - 'dynamodb:GetItem'
+                  - 'dynamodb:UpdateTable'
+                  - 'dynamodb:GetRecords'
+                Resource: !GetAtt
+                  - PartiesTable
+                  - Arn
+                Effect: Allow
+              - Action:
                   - 's3:GetObject'
                 Resource: !Sub
                   - >-
