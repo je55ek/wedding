@@ -104,6 +104,12 @@ def argument_parser():
         help    = 'URL template for the thank-you page.'
     )
     parser.add_argument(
+        '--homepage-url',
+        env_var = 'HOMEPAGE_URL',
+        default = 'https://www.flyingjs4.life/index.html',
+        help    = 'URL of the Flying Js wedding website homepage!'
+    )
+    parser.add_argument(
         '--verbosity',
         env_var = 'VERBOSITY',
         default = logging.getLevelName(logging.WARNING),
@@ -183,5 +189,6 @@ ride_share_handler = \
 
 thank_you_handler = \
     rsvp.ThankYouHandler(
-        lambda: get_template(args.thank_you_template)
+        lambda: get_template(args.thank_you_template),
+        args.homepage_url
     )

@@ -306,14 +306,28 @@ class RideShareHandler(LambdaHandler):
 
 
 class ThankYouHandler(LambdaHandler):
-    def __init__(self, thank_you_template: TemplateResolver) -> None:
+    def __init__(self,
+                 thank_you_template: TemplateResolver,
+                 homepage_url: str) -> None:
         self.__get_template = thank_you_template
+        self.__homepage_url = homepage_url
 
     def _handle(self, event):
-        first_name: Optional[str] = event.get('firstName')
+        maybe_respondent = option.fmap(
+            lambda first_name: {
+                'firstName': first_name
+            }
+        )(event.get('firstName'))
+
         return Ok(
             pystache.render(
                 self.__get_template(),
-                valfilter(option.not_none, { 'firstName': first_name })
+                valfilter(
+                    option.not_none,
+                    {
+                        'respondent': maybe_respondent,
+                        'homepageUrl': self.__homepage_url
+                    }
+                )
             )
         ).as_json()
