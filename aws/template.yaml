@@ -381,7 +381,7 @@ Resources:
             Principal:
               Service:
                 - lambda.amazonaws.com
-    ThanksRole:
+  ThanksRole:
     Type: 'AWS::IAM::Role'
     Properties:
       ManagedPolicyArns:
@@ -685,16 +685,16 @@ Resources:
         - __Stage__: '*'
           __ApiId__: !Ref ServerlessRestApi
   ThanksGetThanksPermission:
-  Type: 'AWS::Lambda::Permission'
-  Properties:
-    Action: 'lambda:invokeFunction'
-    Principal: apigateway.amazonaws.com
-    FunctionName: !Ref Thanks
-    SourceArn: !Sub
-      - >-
-        arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${__ApiId__}/${__Stage__}/GET/thanks
-      - __Stage__: '*'
-        __ApiId__: !Ref ServerlessRestApi
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:invokeFunction'
+      Principal: apigateway.amazonaws.com
+      FunctionName: !Ref Thanks
+      SourceArn: !Sub
+        - >-
+          arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${__ApiId__}/${__Stage__}/GET/thanks
+        - __Stage__: '*'
+          __ApiId__: !Ref ServerlessRestApi
   RsvpGetRsvpPermission:
     Type: 'AWS::Lambda::Permission'
     Properties:
