@@ -1,6 +1,6 @@
 from logging import Logger
 from urllib.parse import parse_qs
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 import pystache
 from botocore.exceptions import ClientError
