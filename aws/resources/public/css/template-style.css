@@ -6,11 +6,6 @@
  * Made By MaterializeCSS.com
  */
 
-nav ul a,
-nav .brand-logo, .side-nav li > a {
-  color: #454545;
-  font-size: 1.25rem;
-}
 body {
     font-family: 'Cormorant', serif;
     font-size: large;
@@ -18,9 +13,25 @@ body {
     min-height: 100vh;
     flex-direction: column;
 }
+p {
+  line-height: 2rem;
+}
+nav ul a,
+nav .brand-logo, .side-nav li > a {
+  color: #454545;
+  font-size: 1.25rem;
+}
 main {
   flex: 1 0 auto;
 } 
+.taupe {
+  background-color: #f7f4ea;
+  color: #454545;
+} 
+.light-tan {
+  background-color: #fff;
+  color: #454545;
+}
 section a {
   color: inherit;
   border-bottom: thin solid
@@ -32,7 +43,6 @@ section a {
   transition: none;
   -webkit-transition: none;
 }
-
 .btn-flat:focus, .btn-flat:active {
   background-color: inherit;
   color:inherit; 
@@ -46,18 +56,6 @@ section a {
   color: #fff;
   border-color: #fff;
 }
-
-p {
-  line-height: 2rem;
-}
-.taupe {
-  background-color: #f7f4ea;
-  color: #454545;
-} 
-.light-tan {
-  background-color: #fff;
-  color: #454545;
-}
 .button-collapse {
   color: #454545;
 }
@@ -67,44 +65,23 @@ p {
   line-height: 0;
   height: auto;
   color: rgba(255,255,255,.9);
-
-
 }
-  .parallax-container .section {
+.parallax-container .section {
     width: 100%;
-  }
-  .cacti-background {
-    background: url('../images/backdrop-2.png') no-repeat 50% 50% fixed;
-    background-size: contain;
+}
+.cacti-background {
+  background: url('../images/backdrop-2.png') no-repeat 50% 50% fixed;
+  background-size: contain;
   -moz-background-size: contain;
   -o-background-size: contain;
   -webkit-background-size: contain;
   color: #454545;
-  }
-
-
-@media only screen and (max-width : 992px) {
-  .parallax-container .section {
-    position: absolute;
-    top: 40%;
-  }
-  #index-banner .section {
-    top: 10%;
-  }
-}
-
-@media only screen and (max-width : 600px) {
-  #index-banner .section {
-    top: 0;
-  }
 }
 
 .icon-block {
   padding: 0 15px;
 }
-.icon-block .material-icons {
-  font-size: inherit;
-}
+
 .card {
   box-shadow: none;
   -webkit-box-shadow: none;
@@ -121,3 +98,28 @@ footer.page-footer {
 form label {
   color: #454545;
 }
+
+/* Media Queries *****************/
+@media only screen and (max-width : 992px) {
+  .parallax-container .section {
+    position: absolute;
+    top: 40%;
+  }
+  #index-banner .section {
+    top: 10%;
+  }
+}
+
+@media only screen and (max-width : 600px) {
+  #index-banner .section {
+    top: 0;
+  }
+}
+@media only screen and (min-width : 1400px) {
+  .parallax-container {
+  min-height: 500px;
+  }
+
+}
+
+
