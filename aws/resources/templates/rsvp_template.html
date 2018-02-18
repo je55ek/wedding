@@ -45,38 +45,35 @@
   <main class="light-tan">
     <section>
       <div class="section container white">
-        <div class="row">
-          <form action="submit">
-            <label class="center"><h5>Who will be attending?</h5></label>
-            
-            <p class="center guest-name">
-              <input type="checkbox" id="guest1" class="" checked="checked"/>
-              <label for="guest1">Guest Name 1</label>
-            </p>
-            <p class="center guest-name">
-              <input type="checkbox" id="guest2" class="" checked="checked"/>
-              <label for="guest2">Guest Name 2</label>
-            </p>
-            <p class="center guest-name">
-              <input type="checkbox" id="guest3" class="" checked="checked"/>
-              <label for="guest3">Guest Name 3</label>
-            </p>
-            <p class="center guest-name">
-              <input type="checkbox" id="guest4" class="" checked="checked"/>
-              <label for="guest4">Guest Name 4</label>
-            </p>
-            <p class="switch center">
-              <label>
-                <input id="decline" type="checkbox">
-                <span class="lever"></span>
-                Regretfully Decline
-              </label>
-            </p>
+        <div class="container">
+          <div class="row flow-text">
+            <div class="col s12">
+              <form action="rsvp" method="post" enctype="application/x-www-form-urlencoded">
+                <label class="center"><h5>Who will be attending?</h5></label>
 
-            <div class="center">
-              <button class="btn-flat" name="action" type="submit">Submit</button>
+                {{#guests}}
+                <p class="center guest-name">
+                  <input type="checkbox" id="{{id}}Check" name="{{id}}" {{#attending}}checked{{/attending}} />
+                  <label for="{{id}}Check">{{firstName}} {{lastName}}</label>
+                </p>
+                {{/guests}}
+                
+                <p class="switch center">
+                  <label>
+                    <input id="decline" type="checkbox">
+                    <span class="lever"></span>
+                    Regretfully Decline
+                  </label>
+                </p>
+
+                <input type="hidden" name="partyId" value="{{partyId}}">
+                <input type="hidden" name="guestId" value="{{guestId}}">
+                <div class="center">
+                  <button class="btn-flat" name="action" type="submit">Submit</button>
+                </div>
+              </form>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </section> 
