@@ -13,6 +13,7 @@ nav .brand-logo, .side-nav li > a {
 }
 body {
     font-family: 'Cormorant', serif;
+    font-size: medium;
     display: flex;
     min-height: 100vh;
     flex-direction: column;
@@ -37,12 +38,12 @@ section a {
   color:inherit; 
 }
 .taupe .btn-flat:hover {
-  background-color: #F1EDEB;
+  background-color: #f5f5f5;
   color: #B69996;
 }
 .light-tan .btn-flat:hover {
   background-color: #B69996;
-  color: #F1EDEB;
+  color: #f5f5f5;
   border-color: #B69996;
 }
 
@@ -51,14 +52,14 @@ p {
 }
 .taupe {
   background-color: #B69996;
-  color: #FFFFFF;
+  color: #f5f5f5;
 } 
 .light-tan {
-  background-color: #F1EDEB;
+  background-color: #f5f5f5;
   color: #454545;
 }
 .button-collapse {
-  color: #F1EDEB;
+  color: #f5f5f5;
 }
 
 .parallax-container {
