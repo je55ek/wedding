@@ -135,10 +135,10 @@ class RsvpHandler(LambdaHandler):
             'local'  : party.local,
             'guests' : [
                 {
-                    'id'        : guest.id,
-                    'first_name': guest.first_name,
-                    'last_name' : guest.last_name,
-                    'attending' : guest.attending
+                    'id'       : guest.id,
+                    'firstName': guest.first_name,
+                    'lastName' : guest.last_name,
+                    'attending': guest.attending or True
                 }
                 for guest in party.guests
             ]
