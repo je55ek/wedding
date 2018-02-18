@@ -15,6 +15,10 @@ _A = TypeVar('_A')
 
 
 class LambdaHandler(ABC):
+    METHOD_FIELD = 'httpMethod'
+    QUERY_FIELD = 'queryStringParameters'
+    PATH_FIELD = 'pathParameters'
+
     @abstractmethod
     def _handle(self, event):
         pass
@@ -24,10 +28,6 @@ class LambdaHandler(ABC):
 
 
 class RestResource(Generic[_A], LambdaHandler):
-    METHOD_FIELD = 'httpMethod'
-    QUERY_FIELD = 'queryStringParameters'
-    PATH_FIELD = 'pathParameters'
-
     def __init__(self, codec: JsonCodec[_A]) -> None:
         self.__codec = codec
 
@@ -39,9 +39,9 @@ class RestResource(Generic[_A], LambdaHandler):
         )(body.get('items'))
 
     def __route(self, event):
-        method   = event[RestResource.METHOD_FIELD]
-        query    = event.get(RestResource.QUERY_FIELD) or {}
-        path     = event.get(RestResource.PATH_FIELD ) or {}
+        method   = event[self.METHOD_FIELD].upper()
+        query    = event.get(self.QUERY_FIELD) or {}
+        path     = event.get(self.PATH_FIELD ) or {}
         maybe_id = path.get('id')
 
         if method == 'GET':
