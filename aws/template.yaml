@@ -1317,6 +1317,10 @@ Resources:
                 in: "query"
                 required: false
                 type: "string"
+              - name: "party"
+                in: "query"
+                required: false
+                type: "string"
               responses:
                 "200":
                   description: "200 response"
@@ -1338,7 +1342,8 @@ Resources:
                 requestTemplates:
                   application/json: "#set($inputRoot = $input.path('$'))\n{\n    \"local\": \"\
                     $input.params('local')\",\n    \"guestId\": \"$input.params('guest')\",\n    \
-                    \"rideshare\": \"$input.params('rideshare')\"\n}"
+                    \"rideshare\": \"$input.params('rideshare')\",\n    \
+                    \"partyId\": \"$input.params('party')\"\n}"
                 contentHandling: "CONVERT_TO_TEXT"
                 type: "aws"
           /{item}:

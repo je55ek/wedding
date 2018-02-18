@@ -1,16 +1,16 @@
 import os.path
 from logging import Logger
-from typing import Callable, Optional, Any, Dict
+from urllib.parse import parse_qs
+from typing import Callable, Any, Dict
 
 import pystache
 from toolz.dicttoolz import assoc
-from toolz.itertoolz import first
 from toolz.functoolz import partial
 
 from wedding.general.aws.rest import LambdaHandler
 from wedding.general.aws.rest.responses import TemporaryRedirect, HttpResponse, Ok
 from wedding.general.functional import option
-from wedding.model import PartyStore, EmailOpened, Party, CardClicked, RsvpSubmitted
+from wedding.model import PartyStore, EmailOpened, Party, CardClicked, RsvpSubmitted, get_guest, Guest
 
 
 TemplateResolver = Callable[[], str]
@@ -90,6 +90,7 @@ class RsvpHandler(LambdaHandler):
     def __init__(self,
                  rsvp_template: TemplateResolver,
                  rsvp_summary_template: TemplateResolver,
+                 rideshare_url_template: str,
                  not_found_url: str,
                  parties: PartyStore,
                  logger: Logger) -> None:
@@ -98,12 +99,15 @@ class RsvpHandler(LambdaHandler):
         Args:
             rsvp_template: A callable that returns the HTML template for the RSVP page.
             rsvp_summary_template: A callable that returns the HTML template for the RSVP summary page.
+            rideshare_url_template: A URL template that contains variables  `{local}`, `{guestId}`, `{partyId}`, and
+                `{rideshare}`.
             not_found_url: URL of the page to redirect to if a party is not found in the database.
             parties: Store for :obj:`Party` instances.
         """
         self.__parties = parties
-        self.__redirect = TemporaryRedirect(not_found_url)
+        self.__not_found = TemporaryRedirect(not_found_url)
         self.__rsvp_template = rsvp_template
+        self.__rideshare_url_template = rideshare_url_template
         self.__summary_template = rsvp_summary_template
         self.__logger = logger
 
@@ -116,15 +120,6 @@ class RsvpHandler(LambdaHandler):
                 context
             )
         )
-
-    def __get_rideshare(self,
-                        party: Party,
-                        guest_id: str) -> Optional[bool]:
-        try:
-            return first(guest.rideshare for guest in party.guests if guest.id == guest_id)
-        except StopIteration:
-            self.__logger.error(f'Guest {guest_id} not found in party {party.id}')
-            return False
 
     def __rsvp_context(self,
                        party: Party,
@@ -146,20 +141,27 @@ class RsvpHandler(LambdaHandler):
     def __summary_context(self,
                           party: Party,
                           guest_id: str) -> Dict[str, Any]:
+        def log_error():
+            self.__logger.error(f'Guest {guest_id} not found in party {party.id}')
+            return False
+
         return assoc(
             self.__rsvp_context(party, guest_id),
             'rideshare',
-            self.__get_rideshare(party, guest_id)
+            option.cata(
+                lambda guest: guest.rideshare,
+                log_error
+            )(get_guest(guest_id)(party))
         )
 
-    def _handle(self, event):
+    def __get(self, event):
         party_id: str = event['partyId']
         guest_id: str = event['guestId']
 
         maybe_get_context, get_template = option.fmap(
             lambda party:
-                (partial(self.__summary_context, party), self.__summary_template) if party.rsvp_stage == RsvpSubmitted else
-                (partial(self.__rsvp_context   , party), self.__rsvp_template   )
+            (partial(self.__summary_context, party), self.__summary_template) if party.rsvp_stage == RsvpSubmitted else
+            (partial(self.__rsvp_context   , party), self.__rsvp_template   )
         )(self.__parties.get(party_id))
 
         return option.cata(
@@ -167,8 +169,38 @@ class RsvpHandler(LambdaHandler):
                 get_template(),
                 get_context(guest_id)
             ),
-            lambda: self.__redirect
-        )(maybe_get_context).as_json()
+            lambda: self.__not_found
+        )(maybe_get_context)
+
+    def __post(self, event):
+        data = parse_qs(event['query'], strict_parsing=True)
+        guest_id: str = data['guestId']
+        party_id: str = data['partyId']
+
+        party = self.__parties.get(party_id)
+        maybe_guest = option.fmap(get_guest(guest_id))(party)
+
+        def redirect(guest: Guest):
+            return TemporaryRedirect(
+                self.__rideshare_url_template
+                    .replace('{local}'    , party.local    )
+                    .replace('{guestId}'  , guest_id       )
+                    .replace('{partyId}'  , party_id       )
+                    .replace('{rideshare}', guest.rideshare)
+            )
+
+        return option.cata(
+            redirect,
+            lambda: self.__not_found
+        )(maybe_guest)
+
+    def _handle(self, event):
+        method = event[self.METHOD_FIELD].upper()
+        return (
+            self.__get (event) if method == 'GET'  else
+            self.__post(event) if method == 'POST' else
+            self.__not_found
+        ).as_json()
 
 
 class RideShareHandler(LambdaHandler):
@@ -188,6 +220,7 @@ class RideShareHandler(LambdaHandler):
     def _handle(self, event):
         local     = _parse_bool(event['local'])
         guest_id  = event['guestId']
+        # party_id  = event['partyId']
         rideshare = option.fmap(_parse_bool)(event.get('rideshare'))
 
         return Ok(

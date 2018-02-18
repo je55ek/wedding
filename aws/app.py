@@ -84,6 +84,13 @@ def argument_parser():
         default = 'http://www.flyingjs4.life/404.html'
     )
     parser.add_argument(
+        '--rideshare-url',
+        env_var = 'RIDESHARE_URL',
+        default = 'rideshare?guest={guestId}&party={partyId}&local={local}&rideshare={rideshare}',
+        help    = 'URL template for the ride sharing form. Must contain variables {local}, {guestId}, ' +
+                  '{partyId}, and {rideshare}'
+    )
+    parser.add_argument(
         '--verbosity',
         env_var = 'VERBOSITY',
         default = logging.getLevelName(logging.WARNING),
@@ -143,6 +150,7 @@ rsvp_handler = \
     rsvp.RsvpHandler(
         lambda: get_template(args.rsvp_template),
         lambda: get_template(args.rsvp_summary_template),
+        args.rideshare_url,
         args.not_found_url,
         party_store,
         logger
