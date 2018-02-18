@@ -1404,7 +1404,7 @@ Resources:
                 passthroughBehavior: "when_no_templates"
                 httpMethod: "POST"
                 requestTemplates:
-                  application/json: "{\n    \"httpMethod\": \"GET\",\n    \"query\": {\n        \"local\": \"$input.params(\'local\')\",\n        \"guestId\": \"$input.params(\'guest\')\",\n        \"rideshare\": \"$input.params(\'rideshare\')\",\n        \"partyId\": \"$input.params(\'party\')\"\n    }\n}\n"
+                  application/json: "{\n    \"httpMethod\": \"GET\",\n    \"query\": {\n        \"local\": \"$input.params('local')\",\n        \"guestId\": \"$input.params('guest')\",\n        \"rideshare\": \"$input.params('rideshare')\",\n        \"partyId\": \"$input.params('party')\"\n    }\n}\n"
                 contentHandling: "CONVERT_TO_TEXT"
                 type: "aws"
             post:
