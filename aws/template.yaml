@@ -15,6 +15,14 @@ Parameters:
     Default: flyingj-wedding
     Type: String
     Description: S3 bucket name where templates and static site resources are kept
+  CustomDomainName:
+    Default: www.flyingjs4.life
+    Type: String
+    Description: Domain name
+  SslCertificate:
+    Default: arn:aws:acm:us-east-1:740502329883:certificate/bd4b143e-7c8b-48c8-8809-c22391105a02
+    Type: String
+    Description: ARN of the SSL certificate for www.flyingjs4.life
 Description: Flying Js serverless wedding RSVP application.
 Resources:
   Parties:
@@ -672,6 +680,45 @@ Resources:
       KeySchema:
         - KeyType: HASH
           AttributeName: id
+  AdministratorUsagePlan:
+    Type: 'AWS::ApiGateway::UsagePlan'
+    Properties:
+      ApiStages:
+      - ApiId: !Ref ServerlessRestApi
+        Stage: !Ref ServerlessRestApiProdStage
+      Quota:
+        Limit: 5000
+        Period: DAY
+      Throttle:
+        BurstLimit: 500
+        RateLimit: 100
+      UsagePlanName: Administrator
+  ApiKey: 
+    Type: 'AWS::ApiGateway::ApiKey'
+    DependsOn: 
+      - ServerlessRestApiDeployment
+      - ServerlessRestApiProdStage
+    Properties: 
+      Name: flyingjs
+      Enabled: true
+      StageKeys: 
+        - RestApiId: 
+            Ref: ServerlessRestApi
+          StageName: !Ref ServerlessRestApiProdStage
+  DomainName:
+    Type: 'AWS::ApiGateway::DomainName'
+    Properties:
+      DomainName: !Ref CustomDomainName
+      CertificateArn: !Ref SslCertificate
+      EndpointConfiguration:
+        Types:
+          - EDGE
+  UrlMapping:
+    Type: 'AWS::ApiGateway::BasePathMapping'
+    Properties:
+      DomainName: !Ref CustomDomainName
+      RestApiId: !Ref ServerlessRestApi
+      Stage: Prod
   ServerlessRestApiProdStage:
     Type: 'AWS::ApiGateway::Stage'
     Properties:
@@ -714,7 +761,8 @@ Resources:
                   "200":
                     statusCode: "302"
                     responseParameters:
-                      method.response.header.Location: "'https://www.flyingjs4.life/index.html'"
+                      method.response.header.Location: !Sub >-
+                        "'https://${CustomDomainName}/index.html'"
                 passthroughBehavior: "when_no_templates"
                 requestTemplates:
                   application/json: "{\"statusCode\": 200}"
