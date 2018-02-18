@@ -86,9 +86,8 @@ def argument_parser():
     parser.add_argument(
         '--rideshare-url',
         env_var = 'RIDESHARE_URL',
-        default = 'rideshare?guest={guestId}&party={partyId}&local={local}&rideshare={rideshare}',
-        help    = 'URL template for the ride sharing form. Must contain variables {local}, {guestId}, ' +
-                  '{partyId}, and {rideshare}'
+        default = 'rideshare?guest={{guestId}}&party={{partyId}}&local={{local}}&rideshare={{rideshare}}',
+        help    = 'URL template for the ride sharing form.'
     )
     parser.add_argument(
         '--verbosity',

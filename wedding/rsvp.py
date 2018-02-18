@@ -101,8 +101,8 @@ class RsvpHandler(LambdaHandler):
         Args:
             rsvp_template: A callable that returns the HTML template for the RSVP page.
             rsvp_summary_template: A callable that returns the HTML template for the RSVP summary page.
-            rideshare_url_template: A URL template that contains variables  `{local}`, `{guestId}`, `{partyId}`, and
-                `{rideshare}`.
+            rideshare_url_template: A pystache template for the URL of the ridesharing form. Must contain variables
+                `local`, a boolean, `guestId`, a string, `partyId`, a string, and `rideshare` a boolean.
             not_found_url: URL of the page to redirect to if a party is not found in the database.
             parties: Store for :obj:`Party` instances.
         """
@@ -194,15 +194,21 @@ class RsvpHandler(LambdaHandler):
             )
             return InternalServerError('Something has gone horribly wrong...please call Jesse and let him know!')
 
+        # TODO: CAPTURE FORM DATA TO DATABASE!
+
         maybe_guest = option.fmap(get_guest(guest_id))(party)
 
         def redirect(guest: Guest):
             return TemporaryRedirect(
-                self.__rideshare_url_template
-                    .replace('{local}'    , party.local    )
-                    .replace('{guestId}'  , guest_id       )
-                    .replace('{partyId}'  , party_id       )
-                    .replace('{rideshare}', guest.rideshare)
+                pystache.render(
+                    self.__rideshare_url_template,
+                    {
+                        'local': party.local,
+                        'guestId': guest_id,
+                        'partyId': party_id,
+                        'rideshare': guest.rideshare or False
+                    }
+                )
             )
 
         return option.cata(
