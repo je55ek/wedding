@@ -1427,13 +1427,14 @@ Resources:
                     statusCode: "303"
                     responseParameters:
                       method.response.header.Location : "integration.response.body.body"
-              x-amazon-apigateway-integration:
-                requestTemplates:
-                  application/x-www-form-urlencoded: "{\n    \"httpMethod\": \"POST\",\n    \"query\": \"$input.body\"\n}\n"
+                    responseTemplates:
+                      text/html: "$input.path('$').body"
                 uri: !Sub >-
                   arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Rideshare.Arn}/invocations
                 passthroughBehavior: "when_no_templates"
                 httpMethod: "POST"
+                requestTemplates:
+                  application/x-www-form-urlencoded: "{\n    \"httpMethod\": \"POST\",\n    \"query\": \"$input.body\"\n}\n"
                 contentHandling: "CONVERT_TO_TEXT"
                 type: "aws"
           '/thanks':
