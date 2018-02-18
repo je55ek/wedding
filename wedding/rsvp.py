@@ -132,7 +132,6 @@ class RsvpHandler(LambdaHandler):
         return {
             'partyId': party.id,
             'guestId': guest_id,
-            'local'  : party.local,
             'guests' : [
                 {
                     'id'       : guest.id,
