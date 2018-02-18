@@ -194,7 +194,21 @@ class RsvpHandler(LambdaHandler):
             )
             return InternalServerError('Something has gone horribly wrong...please call Jesse and let him know!')
 
-        # TODO: CAPTURE FORM DATA TO DATABASE!
+        try:
+            self.__parties.put(
+                party._replace(
+                    rsvp_stage = RsvpSubmitted,
+                    guests = [
+                        guest._replace(attending = data[guest.id].lower() == 'true')
+                        for guest in party.guests if guest.id in data
+                    ]
+                )
+            )
+        except Exception as exc:
+            self.__logger.error(
+                f'RSVP submitted for party "{party_id}", but database operation failed with error "{exc}".' +
+                f'Raw form data = {event["query"]}, parsed form data = {data}'
+            )
 
         maybe_guest = option.fmap(get_guest(guest_id))(party)
 
