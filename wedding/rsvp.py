@@ -4,7 +4,7 @@ from urllib.parse import parse_qs
 from typing import Callable, Any, Dict
 
 import pystache
-from botocore import ClientError
+from botocore.exceptions import ClientError
 from toolz.dicttoolz import assoc
 from toolz.functoolz import partial
 
