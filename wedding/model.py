@@ -1,9 +1,11 @@
 from abc import ABC, abstractmethod
+from typing import Optional
 
 from marshmallow import ValidationError
 from marshmallow.fields import String, Boolean, Integer, DateTime, Field
 from marshmallow.validate import Range
-from toolz.functoolz import excepts
+from toolz.functoolz import excepts, curry
+from toolz.itertoolz import first
 
 from wedding.general.aws.dynamodb import DynamoDbStore
 from wedding.general.functional.error_handling import throw
@@ -156,4 +158,13 @@ def passenger_group_store(dynamo_table) -> PassengerGroupStore:
         dynamo_table,
         JsonEncoder[str](lambda i: {'id': i}),
         PassengerGroupCodec
+    )
+
+
+@curry
+def get_guest(guest_id: str,
+              party: Party) -> Optional[Guest]:
+    return excepts(StopIteration, first)(
+        guest for guest in party.guests
+        if guest.id == guest_id
     )
