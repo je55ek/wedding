@@ -125,6 +125,20 @@ Resources:
         - RideshareRole
         - Arn
       Runtime: python3.6
+  Thanks:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Code:
+        S3Bucket: !Ref BucketName
+        S3Key: !Ref CodeKey
+      Tags:
+        - Value: wedding
+          Key: project
+      Handler: app.thank_you_handler
+      Role: !GetAtt
+        - ThanksRole
+        - Arn
+      Runtime: python3.6
   Drivers:
     Type: 'AWS::Lambda::Function'
     Properties:
@@ -348,6 +362,32 @@ Resources:
         - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
       Policies:
         - PolicyName: RideshareRolePolicy0
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Action:
+                  - 's3:GetObject'
+                Resource: !Sub
+                  - >-
+                    arn:aws:s3:::${__BucketName__}/templates/*
+                  - __BucketName__: !Ref ResourceBucket
+                Effect: Allow
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action:
+              - 'sts:AssumeRole'
+            Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+    ThanksRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+      Policies:
+        - PolicyName: ThanksRolePolicy0
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -633,6 +673,28 @@ Resources:
           arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${__ApiId__}/${__Stage__}/GET/rideshare
         - __Stage__: '*'
           __ApiId__: !Ref ServerlessRestApi
+  RidesharePostRidesharePermission:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:invokeFunction'
+      Principal: apigateway.amazonaws.com
+      FunctionName: !Ref Rideshare
+      SourceArn: !Sub
+        - >-
+          arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${__ApiId__}/${__Stage__}/POST/rideshare
+        - __Stage__: '*'
+          __ApiId__: !Ref ServerlessRestApi
+  ThanksGetThanksPermission:
+  Type: 'AWS::Lambda::Permission'
+  Properties:
+    Action: 'lambda:invokeFunction'
+    Principal: apigateway.amazonaws.com
+    FunctionName: !Ref Thanks
+    SourceArn: !Sub
+      - >-
+        arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${__ApiId__}/${__Stage__}/GET/thanks
+      - __Stage__: '*'
+        __ApiId__: !Ref ServerlessRestApi
   RsvpGetRsvpPermission:
     Type: 'AWS::Lambda::Permission'
     Properties:
@@ -1372,6 +1434,40 @@ Resources:
                   arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Rsvp.Arn}/invocations
                 passthroughBehavior: "when_no_templates"
                 httpMethod: "POST"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws"
+          '/thanks':
+            get:
+              consumes:
+              - "application/json"
+              produces:
+              - "text/html"
+              parameters:
+              - name: "firstName"
+                in: "query"
+                required: false
+                type: "string"
+              responses:
+                "200":
+                  description: "200 response"
+                  headers:
+                    Content-Type:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                responses:
+                  "default":
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Content-Type: "'text/html'"
+                    responseTemplates:
+                      text/html: "$input.path('$').body"
+                uri: !Sub >-
+                  arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Thanks.Arn}/invocations
+                passthroughBehavior: "when_no_templates"
+                httpMethod: "POST"
+                requestTemplates:
+                  application/json: "#set($inputRoot = $input.path('$'))\n{\n    \"firstName\"\
+                    : \"$input.params('firstName')\"\n}"
                 contentHandling: "CONVERT_TO_TEXT"
                 type: "aws"
           /{item}:

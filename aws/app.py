@@ -81,6 +81,12 @@ def argument_parser():
         help    = 'S3 key of the rsvp summary template'
     )
     parser.add_argument(
+        '--thank-you-template',
+        env_var = 'THANK_YOU_TEMPLATE',
+        default = 'thank_you_template.html',
+        help    = 'S3 key of the thank-you-for-your-RSVP template'
+    )
+    parser.add_argument(
         '--not-found-url',
         env_var = 'NOT_FOUND_URL',
         default = 'http://www.flyingjs4.life/404.html'
@@ -172,4 +178,10 @@ ride_share_handler = \
         args.thank_you_url,
         party_store,
         logger
+    )
+
+
+thank_you_handler = \
+    rsvp.ThankYouHandler(
+        lambda: get_template(args.thank_you_template)
     )

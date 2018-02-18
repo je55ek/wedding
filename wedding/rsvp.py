@@ -1,11 +1,11 @@
 from logging import Logger
 from urllib.parse import parse_qs
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 import pystache
 from botocore.exceptions import ClientError
 from marshmallow import fields
-from toolz.dicttoolz import assoc, valmap, dissoc
+from toolz.dicttoolz import assoc, valmap, dissoc, valfilter
 from toolz.functoolz import partial
 from toolz.itertoolz import first
 
@@ -302,4 +302,18 @@ class RideShareHandler(LambdaHandler):
             self.__get (query) if method == 'GET'  else
             self.__post(query) if method == 'POST' else
             self.__not_found
+        ).as_json()
+
+
+class ThankYouHandler(LambdaHandler):
+    def __init__(self, thank_you_template: TemplateResolver) -> None:
+        self.__get_template = thank_you_template
+
+    def _handle(self, event):
+        first_name: Optional[str] = event.get('firstName')
+        return Ok(
+            pystache.render(
+                self.__get_template(),
+                valfilter(option.not_none, { 'firstName': first_name })
+            )
         ).as_json()
