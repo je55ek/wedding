@@ -21,7 +21,7 @@ all: packages
 		mv $(BUILDDIR)/$(ZIPNAME) ./
 
 static:
-	aws s3 cp --recursive $(RESOURCES) s3://$(RESOURCE_BUCKET)/
+	aws s3 sync $(RESOURCES) s3://$(RESOURCE_BUCKET)/
 
 deploy: clean all static
 	aws s3 mv $(ZIPNAME) s3://$(CODE_BUCKET)/$(ZIPNAME); \
