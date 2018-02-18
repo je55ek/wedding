@@ -88,6 +88,58 @@ RideShareQuery, RideShareQuerySchema = build('RideShareQuery', {
 RideShareQueryCodec: JsonCodec[RideShareQuery] = codec(RideShareQuerySchema(strict=True))
 
 
+class _RideShareFormData:
+    PARTY_ID_FIELD  = 'partyId'
+    GUEST_ID_FIELD  = 'guestId'
+    RIDESHARE_FIELD = 'rideshare'
+
+    def __init__(self,
+                 guest_id: str,
+                 party_id: str,
+                 rideshare: bool) -> None:
+        self.__guest_id  = guest_id
+        self.__party_id  = party_id
+        self.__rideshare = rideshare
+
+    def __str__(self):
+        return (
+                f'Rideshare Form Data: ' +
+                f'{_RideShareFormData.PARTY_ID_FIELD}={self.party_id} ' +
+                f'{_RideShareFormData.GUEST_ID_FIELD}={self.guest_id} ' +
+                f'{_RideShareFormData.RIDESHARE_FIELD}={self.rideshare}'
+        )
+
+    def __repr__(self):
+        return self.__str__()
+
+    @property
+    def guest_id(self) -> str:
+        return self.__guest_id
+
+    @property
+    def party_id(self) -> str:
+        return self.__party_id
+
+    @property
+    def rideshare(self) -> bool:
+        return self.__rideshare
+
+    @staticmethod
+    def parse(raw_form: str):
+        form_data = valmap(
+            first,
+            parse_qs(
+                raw_form,
+                strict_parsing=True
+            )
+        )
+        return _RideShareFormData(
+            guest_id  = form_data[_RideShareFormData.GUEST_ID_FIELD],
+            party_id  = form_data[_RideShareFormData.PARTY_ID_FIELD],
+            rideshare = _parse_bool(form_data[_RideShareFormData.RIDESHARE_FIELD])
+        )
+
+
 class RsvpHandler(LambdaHandler):
     def __init__(self,
                  rsvp_template: TemplateResolver,
@@ -258,25 +310,25 @@ class RideShareHandler(LambdaHandler):
             )
         )
 
-    def __post(self, query: RideShareQuery) -> HttpResponse:
+    def __post(self, form: _RideShareFormData) -> HttpResponse:
         try:
             party = self.__parties.modify(
-                query.party_id,
+                form.party_id,
                 lambda party: party._replace(
                     guests = [
-                        guest._replace(rideshare = query.rideshare)
-                        for guest in party.guests if guest.id == query.guest_id
+                        guest._replace(rideshare = form.rideshare)
+                        for guest in party.guests if guest.id == form.guest_id
                     ]
                 )
             )
         except ClientError as exc:
             self.__logger.error(
-                f'Ride share preference submitted for guest "{query.guest_id}" in party "{query.party_id}", ' +
-                f'but database operation failed with error "{exc}. Query data = {query}'
+                f'Ride share preference submitted for guest "{form.guest_id}" in party "{form.party_id}", ' +
+                f'but database operation failed with error "{exc}. Form data = {form}'
             )
             return InternalServerError('Something has gone horribly wrong...please call Jesse and let him know!')
 
-        maybe_guest = option.fmap(get_guest(query.guest_id))(party)
+        maybe_guest = option.fmap(get_guest(form.guest_id))(party)
 
         return option.cata(
             lambda guest: TemporaryRedirect(
@@ -289,11 +341,11 @@ class RideShareHandler(LambdaHandler):
         )(maybe_guest)
 
     def _handle(self, event):
-        method = event[self.METHOD_FIELD].upper()
-        query  = RideShareQueryCodec.decode(event['query'])
+        method   = event[self.METHOD_FIELD].upper()
+        raw_data = event['query']
         return (
-            self.__get (query) if method == 'GET'  else
-            self.__post(query) if method == 'POST' else
+            self.__get (RideShareQueryCodec.decode(raw_data)) if method == 'GET'  else
+            self.__post(_RideShareFormData .parse (raw_data)) if method == 'POST' else
             self.__not_found
         ).as_json()
 
