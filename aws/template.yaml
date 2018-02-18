@@ -721,6 +721,10 @@ Resources:
           - EDGE
   UrlMapping:
     Type: 'AWS::ApiGateway::BasePathMapping'
+    DependsOn: 
+      - DomainName
+      - ServerlessRestApiDeployment
+      - ServerlessRestApiProdStage
     Properties:
       DomainName: !Ref CustomDomainName
       RestApiId: !Ref ServerlessRestApi
