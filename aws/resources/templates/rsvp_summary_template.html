@@ -37,22 +37,38 @@
 
   <header class="light-tan">
     <br>
-    <h1 class="center">RSVP</h1>
-    <h4 class="center">We hope you can join us!</h4>
+    <h1 class="center">Thank You!</h1>
+    <h4 class="center">Your reply has been received.</h4>
     <br>
     <br>
   </header>
   <main class="light-tan">
     <section>
       <div class="section container white">
-        <div class="row">
-          <form action="submit">
+        <div class="container">
+          <div class="row flow-text">
+            <div class="col s12">
+              <form action="submit">
+                <p>Here is a summary of the information we have:</p>
+                <ul>
+                  <li>Guests in attendance:</li>
+                  <li>Interested in ridesharing:</li>
+                </ul>
+                <div class="input-field col s12">
+                  <textarea id="textarea1" class="materialize-textarea"></textarea>
+                  <label for="textarea1">Leave an optional message:</label>
+                </div>
 
 
-            <div class="center">
-              <button class="btn-flat" name="action" type="submit">Submit</button>
+                <div class="left">
+                  <button href="#" class="btn-flat" name="action" type="submit">Edit my RSVP</button>
+                </div>
+                <div class="right">
+                  <button href="#" class="btn-flat" name="action" type="submit">Send</button>
+                </div>
+              </form>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </section> 
