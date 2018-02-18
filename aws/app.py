@@ -3,6 +3,8 @@ import logging
 from configargparse import ArgParser
 
 from toolz import get
+
+import wedding.invitation
 from wedding.general.resource import StoreBackedResource
 from wedding import rsvp, model
 from wedding.general.functional import option
@@ -131,14 +133,14 @@ passengers_handler = passengers_resource(passenger_group_store)
 
 
 envelope_handler = \
-    rsvp.EnvelopeImageHandler(
+    wedding.invitation.EnvelopeImageHandler(
         args.envelope_bucket,
         party_store
     )
 
 
 invitation_handler = \
-    rsvp.InvitationHandler(
+    wedding.invitation.InvitationHandler(
         lambda: get_template(args.invitation_template),
         args.not_found_url,
         party_store
