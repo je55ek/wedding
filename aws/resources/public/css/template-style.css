@@ -1,0 +1,114 @@
+/* Custom Stylesheet */
+/**
+ * Use this file to override Materialize files so you can update
+ * the core Materialize files in the future
+ *
+ * Made By MaterializeCSS.com
+ */
+
+nav ul a,
+nav .brand-logo, .side-nav li > a {
+  color: #FFFFFF;
+  font-size: 1.25rem;
+}
+body {
+    font-family: 'Cormorant', serif;
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+main {
+  flex: 1 0 auto;
+} 
+section a {
+  color: inherit;
+  border-bottom: thin solid
+}
+.btn-flat {
+  border: solid thin;
+  border-radius: 0;
+  color: inherit;
+  transition: none;
+  -webkit-transition: none;
+}
+
+.btn-flat:focus, .btn-flat:active {
+  background-color: inherit;
+  color:inherit; 
+}
+.taupe .btn-flat:hover {
+  background-color: #F1EDEB;
+  color: #B69996;
+}
+.light-tan .btn-flat:hover {
+  background-color: #B69996;
+  color: #F1EDEB;
+  border-color: #B69996;
+}
+
+p {
+  line-height: 2rem;
+}
+.taupe {
+  background-color: #B69996;
+  color: #FFFFFF;
+} 
+.light-tan {
+  background-color: #F1EDEB;
+  color: #454545;
+}
+.button-collapse {
+  color: #F1EDEB;
+}
+
+.parallax-container {
+  min-height: 380px;
+  line-height: 0;
+  height: auto;
+  color: rgba(255,255,255,.9);
+
+
+}
+  .parallax-container .section {
+    width: 100%;
+  }
+
+
+@media only screen and (max-width : 992px) {
+  .parallax-container .section {
+    position: absolute;
+    top: 40%;
+  }
+  #index-banner .section {
+    top: 10%;
+  }
+}
+
+@media only screen and (max-width : 600px) {
+  #index-banner .section {
+    top: 0;
+  }
+}
+
+.icon-block {
+  padding: 0 15px;
+}
+.icon-block .material-icons {
+  font-size: inherit;
+}
+.card {
+  box-shadow: none;
+  -webkit-box-shadow: none;
+}
+
+footer.page-footer {
+  margin: 0;
+}
+.page-footer .footer-copyright {
+  background-color: #B69996;
+}
+
+/* RSVP Form Styles **************/
+form label {
+  color: #454545;
+}
