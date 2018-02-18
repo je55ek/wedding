@@ -45,32 +45,36 @@
   <main class="light-tan">
     <section>
       <div class="section container white">
-        <div class="row">
-          <form action="rsvp" method="post" enctype="application/x-www-form-urlencoded">
-            <label class="center"><h5>Who will be attending?</h5></label>
+        <div class="container">
+          <div class="row flow-text">
+            <div class="col s12">
+              <form action="rsvp" method="post" enctype="application/x-www-form-urlencoded">
+                <label class="center"><h5>Who will be attending?</h5></label>
 
-            {{#guests}}
+                {{#guests}}
                 <p class="center guest-name">
                   <input type="checkbox" id="{{id}}" {{#attending}}checked{{/attending}} />
                   <label for="{{id}}">{{firstName}} {{lastName}}</label>
                 </p>
-            {{/guests}}
-            
-            <p class="switch center">
-              <label>
-                <input id="decline" type="checkbox">
-                <span class="lever"></span>
-                Regretfully Decline
-              </label>
-            </p>
+                {{/guests}}
+                
+                <p class="switch center">
+                  <label>
+                    <input id="decline" type="checkbox">
+                    <span class="lever"></span>
+                    Regretfully Decline
+                  </label>
+                </p>
 
-            <input type="hidden" name="party" value="{{partyId}}">
-            <input type="hidden" name="guest" value="{{guestId}}">
-            <input type="hidden" name="local" value="{{local}}">
-            <div class="center">
-              <button class="btn-flat" name="action" type="submit">Submit</button>
+                <input type="hidden" name="party" value="{{partyId}}">
+                <input type="hidden" name="guest" value="{{guestId}}">
+                <input type="hidden" name="local" value="{{local}}">
+                <div class="center">
+                  <button class="btn-flat" name="action" type="submit">Submit</button>
+                </div>
+              </form>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </section> 
