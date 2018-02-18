@@ -57,16 +57,10 @@ def argument_parser():
         help    = 'S3 key of the invitation template'
     )
     parser.add_argument(
-        '--local-rideshare-template',
-        env_var = 'LOCAL_RIDESHARE_TEMPLATE',
-        default = 'local_rideshare_template.html',
-        help    = 'S3 key of the rideshare template for local guests'
-    )
-    parser.add_argument(
-        '--remote-rideshare-template',
-        env_var = 'REMOTE_RIDESHARE_TEMPLATE',
-        default = 'remote_rideshare_template.html',
-        help    = 'S3 key of the rideshare template for out-of-town guests'
+        '--rideshare-template',
+        env_var = 'RIDESHARE_TEMPLATE',
+        default = 'rideshare_template.html',
+        help    = 'S3 key of the rideshare-form template'
     )
     parser.add_argument(
         '--rsvp-template',
@@ -178,8 +172,7 @@ rsvp_handler = \
 
 ride_share_handler = \
     rsvp.RideShareHandler(
-        lambda: get_template(args.local_rideshare_template ),
-        lambda: get_template(args.remote_rideshare_template),
+        lambda: get_template(args.rideshare_template),
         args.not_found_url,
         args.thank_you_url,
         party_store,

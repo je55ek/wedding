@@ -229,8 +229,7 @@ class RsvpHandler(LambdaHandler):
 
 class RideShareHandler(LambdaHandler):
     def __init__(self,
-                 local_template: TemplateResolver,
-                 out_of_town_template: TemplateResolver,
+                 template: TemplateResolver,
                  not_found_url: str,
                  thank_you_url: str,
                  parties: PartyStore,
@@ -238,17 +237,14 @@ class RideShareHandler(LambdaHandler):
         """Create a new instance of the :obj:`InvitationHandler` class.
 
         Args:
-            local_template: A callable that returns the HTML template for the ride-share page for in-town guests.
-            out_of_town_template: A callable that returns the HTML template for the ride-share page for out-of-town
-                guests.
+            template: A callable that returns the HTML template for the ride-share form.
             not_found_url: URL of the page to redirect to if a party is not found in the database.
             thank_you_url: Mustache template of URL to redirect users to after ride-share form submission.
                 Template must accept a variable `firstName` of type string.
             parties: Store for :obj:`Party` instances.
             logger: Interface for emitting log messages.
         """
-        self.__local_template       = local_template
-        self.__out_of_town_template = out_of_town_template
+        self.__template             = template
         self.__not_found            = TemporaryRedirect(not_found_url)
         self.__thank_you_url        = thank_you_url
         self.__parties: PartyStore  = parties
@@ -257,11 +253,8 @@ class RideShareHandler(LambdaHandler):
     def __get(self, query: RideShareQuery) -> HttpResponse:
         return Ok(
             pystache.render(
-                self.__local_template() if query.local else self.__out_of_town_template(),
-                {
-                    'guestId'  : query.guest_id,
-                    'rideshare': query.rideshare
-                }
+                self.__template(),
+                RideShareQueryCodec.encode(query)
             )
         )
 
