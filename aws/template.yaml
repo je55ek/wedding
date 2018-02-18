@@ -121,6 +121,9 @@ Resources:
         - Value: wedding
           Key: project
       Handler: app.ride_share_handler
+      Environment:
+        Variables:
+          PARTIES_TABLE: !Ref PartiesTable
       Role: !GetAtt
         - RideshareRole
         - Arn
