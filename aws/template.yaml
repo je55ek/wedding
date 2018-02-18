@@ -1427,8 +1427,6 @@ Resources:
                     statusCode: "303"
                     responseParameters:
                       method.response.header.Location : "integration.response.body.body"
-                    responseTemplates:
-                      text/html: "$input.path('$').body"
                 uri: !Sub >-
                   arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Rideshare.Arn}/invocations
                 passthroughBehavior: "when_no_templates"
