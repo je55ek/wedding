@@ -705,6 +705,12 @@ Resources:
         - RestApiId: 
             Ref: ServerlessRestApi
           StageName: !Ref ServerlessRestApiProdStage
+  UsagePlanKey:
+    Type: 'AWS::ApiGateway::UsagePlanKey'
+    Properties : 
+      KeyId: !Ref ApiKey
+      KeyType: API_KEY
+      UsagePlanId: !Ref AdministratorUsagePlan
   DomainName:
     Type: 'AWS::ApiGateway::DomainName'
     Properties:
