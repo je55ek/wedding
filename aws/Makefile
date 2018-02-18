@@ -26,6 +26,7 @@ static:
 deploy: clean all static
 	aws s3 mv $(ZIPNAME) s3://$(CODE_BUCKET)/$(ZIPNAME); \
   aws cloudformation deploy \
+	  --s3-bucket $(CODE_BUCKET) \
     --template-file $(CLOUDFORMATION_TEMPLATE) \
     --stack-name $(STACK_NAME) \
     --tags $(AWS_TAGS) \
