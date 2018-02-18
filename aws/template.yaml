@@ -644,6 +644,17 @@ Resources:
           arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${__ApiId__}/${__Stage__}/GET/rsvp
         - __Stage__: '*'
           __ApiId__: !Ref ServerlessRestApi
+  RsvpPostRsvpPermission:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: 'lambda:invokeFunction'
+      Principal: apigateway.amazonaws.com
+      FunctionName: !Ref Rsvp
+      SourceArn: !Sub
+        - >-
+          arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${__ApiId__}/${__Stage__}/POST/rsvp
+        - __Stage__: '*'
+          __ApiId__: !Ref ServerlessRestApi
   PartiesTable:
     Type: 'AWS::DynamoDB::Table'
     Properties:
@@ -1258,6 +1269,33 @@ Resources:
                   application/json: "#set($inputRoot = $input.path('$'))\n{\n    \"partyId\": \"\
                     $input.params('party')\",\n    \"guestId\": \"$input.params('guest')\"\
                     \n}"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws"
+            post:
+              consumes:
+              - "application/json"
+              produces:
+              - "text/html"
+              responses:
+                "200":
+                  description: "200 response"
+                  headers:
+                    Content-Type:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                responses:
+                  "default":
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Content-Type: "'text/html'"
+                    responseTemplates:
+                      text/html: "$input.path('$').body"
+                uri: !Sub >-
+                  arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Rsvp.Arn}/invocations
+                passthroughBehavior: "when_no_templates"
+                httpMethod: "POST"
+                requestTemplates:
+                  application/json: "{\"query\": \"$input.path('$').body\"}"
                 contentHandling: "CONVERT_TO_TEXT"
                 type: "aws"
           '/rideshare':
