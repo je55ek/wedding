@@ -1280,17 +1280,17 @@ Resources:
                 required: true
                 type: "string"
               responses:
-                "302":
-                  description: "302 response"
+                "303":
+                  description: "Redirect to rideshare page"
                   headers:
                     Location:
                       type: "string"
               x-amazon-apigateway-integration:
                 responses:
                   "default":
-                    statusCode: "302"
+                    statusCode: "303"
                     responseParameters:
-                      method.response.header.Location : "integration.response.body.location"
+                      method.response.header.Location : "integration.response.body.body"
                 requestTemplates:
                   application/x-www-form-urlencoded: "{\n    \"query\": \"$input.body\",\n\
                     \    \"httpMethod\": \"POST\"\n}"
