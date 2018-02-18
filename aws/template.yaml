@@ -1282,16 +1282,12 @@ Resources:
                 passthroughBehavior: "when_no_match"
                 httpMethod: "GET"
                 type: "aws"
-          /{folder}/{item}:
+          /css/{item}:
             get:
               produces:
               - "application/json"
               parameters:
               - name: "item"
-                in: "path"
-                required: true
-                type: "string"
-              - name: "folder"
                 in: "path"
                 required: true
                 type: "string"
@@ -1318,9 +1314,45 @@ Resources:
                       method.response.header.Timestamp: "integration.response.header.Date"
                 requestParameters:
                   integration.request.path.item: "method.request.path.item"
-                  integration.request.path.folder: "method.request.path.folder"
                 uri: !Sub >-
-                  arn:aws:apigateway:${AWS::Region}:s3:path/${ResourceBucket}/public/{folder}/{item}
+                  arn:aws:apigateway:${AWS::Region}:s3:path/${ResourceBucket}/public/css/{item}
+                passthroughBehavior: "when_no_match"
+                httpMethod: "GET"
+                type: "aws"
+          /images/{item}:
+            get:
+              produces:
+              - "application/json"
+              parameters:
+              - name: "item"
+                in: "path"
+                required: true
+                type: "string"
+              responses:
+                "200":
+                  description: "200 response"
+                  headers:
+                    Content-Length:
+                      type: "string"
+                    Timestamp:
+                      type: "string"
+                    Content-Type:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                credentials: !GetAtt
+                  - SiteRole
+                  - Arn
+                responses:
+                  "default":
+                    statusCode: "200"
+                    responseParameters:
+                      method.response.header.Content-Type: "integration.response.header.Content-Type"
+                      method.response.header.Content-Length: "integration.response.header.Content-Length"
+                      method.response.header.Timestamp: "integration.response.header.Date"
+                requestParameters:
+                  integration.request.path.item: "method.request.path.item"
+                uri: !Sub >-
+                  arn:aws:apigateway:${AWS::Region}:s3:path/${ResourceBucket}/public/images/{item}
                 passthroughBehavior: "when_no_match"
                 httpMethod: "GET"
                 type: "aws"
