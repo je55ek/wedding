@@ -1379,9 +1379,11 @@ Resources:
                 type: "aws"
           /images/{item}:
             get:
-              produces:
-              - "application/json"
               parameters:
+              - name: "Accept"
+                in: "header"
+                required: true
+                type: "string"
               - name: "item"
                 in: "path"
                 required: true
@@ -1408,6 +1410,7 @@ Resources:
                       method.response.header.Content-Length: "integration.response.header.Content-Length"
                       method.response.header.Timestamp: "integration.response.header.Date"
                 requestParameters:
+                  integration.request.header.Accept: "method.request.header.Accept"
                   integration.request.path.item: "method.request.path.item"
                 uri: !Sub >-
                   arn:aws:apigateway:${AWS::Region}:s3:path/${ResourceBucket}/public/images/{item}
@@ -1419,4 +1422,10 @@ Resources:
             type: "apiKey"
             name: "x-api-key"
             in: "header"
+        x-amazon-apigateway-binary-media-types:
+        - "image/png"
+        - "image/jpeg"
+        - "application/octet-stream"
+        - "image/webp"
+        - "image/apng"
         swagger: '2.0'
