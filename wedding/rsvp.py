@@ -5,8 +5,9 @@ from typing import Callable, Any, Dict
 
 import pystache
 from botocore.exceptions import ClientError
-from toolz.dicttoolz import assoc
+from toolz.dicttoolz import assoc, valmap
 from toolz.functoolz import partial
+from toolz.itertoolz import first
 
 from wedding.general.aws.rest import LambdaHandler
 from wedding.general.aws.rest.responses import TemporaryRedirect, HttpResponse, Ok, InternalServerError
@@ -174,7 +175,13 @@ class RsvpHandler(LambdaHandler):
         )(maybe_get_context)
 
     def __post(self, event):
-        data = parse_qs(event['query'], strict_parsing=True)
+        data = valmap(
+            first,
+            parse_qs(
+                event['query'],
+                strict_parsing=True
+            )
+        )
         guest_id: str = data['guestId']
         party_id: str = data['partyId']
 
