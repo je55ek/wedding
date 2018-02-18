@@ -8,12 +8,12 @@
 
 nav ul a,
 nav .brand-logo, .side-nav li > a {
-  color: #FFFFFF;
+  color: #454545;
   font-size: 1.25rem;
 }
 body {
     font-family: 'Cormorant', serif;
-    font-size: medium;
+    font-size: large;
     display: flex;
     min-height: 100vh;
     flex-direction: column;
@@ -38,28 +38,28 @@ section a {
   color:inherit; 
 }
 .taupe .btn-flat:hover {
-  background-color: #f5f5f5;
-  color: #B69996;
+  background-color: #454545;
+  color: #f7f4ea;
 }
 .light-tan .btn-flat:hover {
-  background-color: #B69996;
-  color: #f5f5f5;
-  border-color: #B69996;
+  background-color: #454545;
+  color: #fff;
+  border-color: #fff;
 }
 
 p {
   line-height: 2rem;
 }
 .taupe {
-  background-color: #B69996;
-  color: #f5f5f5;
+  background-color: #f7f4ea;
+  color: #454545;
 } 
 .light-tan {
-  background-color: #f5f5f5;
+  background-color: #fff;
   color: #454545;
 }
 .button-collapse {
-  color: #f5f5f5;
+  color: #454545;
 }
 
 .parallax-container {
@@ -72,6 +72,14 @@ p {
 }
   .parallax-container .section {
     width: 100%;
+  }
+  .cacti-background {
+    background: url('../images/backdrop-2.png') no-repeat 50% 50% fixed;
+    background-size: contain;
+  -moz-background-size: contain;
+  -o-background-size: contain;
+  -webkit-background-size: contain;
+  color: #454545;
   }
 
 
@@ -106,7 +114,7 @@ footer.page-footer {
   margin: 0;
 }
 .page-footer .footer-copyright {
-  background-color: #B69996;
+  background-color: #b784a7;
 }
 
 /* RSVP Form Styles **************/
