@@ -4,6 +4,7 @@ from typing import Any, Dict
 
 import pystache
 from botocore.exceptions import ClientError
+from marshmallow import fields
 from toolz.dicttoolz import assoc, valmap, dissoc
 from toolz.functoolz import partial
 from toolz.itertoolz import first
@@ -12,6 +13,7 @@ from wedding import TemplateResolver
 from wedding.general.aws.rest import LambdaHandler
 from wedding.general.aws.rest.responses import TemporaryRedirect, HttpResponse, Ok, InternalServerError
 from wedding.general.functional import option
+from wedding.general.model import optional, required, build, JsonCodec, codec
 from wedding.model import PartyStore, Party, RsvpSubmitted, get_guest, Guest
 
 
@@ -75,6 +77,15 @@ class _RsvpFormData:
                 )
             )
         )
+
+
+RideShareQuery, RideShareQuerySchema = build('RideShareQuery', {
+    'local'    : required(fields.Bool           ),
+    'guest_id' : required(fields.Str , 'guestId'),
+    'party_id' : required(fields.Str , 'partyId'),
+    'rideshare': optional(fields.Bool           )
+})
+RideShareQueryCodec: JsonCodec[RideShareQuery] = codec(RideShareQuerySchema(strict=True))
 
 
 class RsvpHandler(LambdaHandler):
@@ -188,15 +199,16 @@ class RsvpHandler(LambdaHandler):
         maybe_guest = option.fmap(get_guest(form.guest_id))(party)
 
         def redirect(guest: Guest):
+            rideshare_query = RideShareQuery(
+                local     = party.local  ,
+                guest_id  = form.guest_id,
+                party_id  = form.party_id,
+                rideshare = guest.rideshare or False
+            )
             return TemporaryRedirect(
                 pystache.render(
                     self.__rideshare_url_template,
-                    {
-                        'local': party.local,
-                        'guestId': form.guest_id,
-                        'partyId': form.party_id,
-                        'rideshare': guest.rideshare or False
-                    }
+                    RideShareQueryCodec.encode(rideshare_query)
                 )
             )
 
@@ -229,17 +241,13 @@ class RideShareHandler(LambdaHandler):
         self.__out_of_town_template = out_of_town_template
 
     def _handle(self, event):
-        local     = _parse_bool(event['local'])
-        guest_id  = event['guestId']
-        # party_id  = event['partyId']
-        rideshare = option.fmap(_parse_bool)(event.get('rideshare'))
-
+        query = RideShareQueryCodec.decode(event)
         return Ok(
             pystache.render(
-                self.__local_template() if local else self.__out_of_town_template(),
+                self.__local_template() if query.local else self.__out_of_town_template(),
                 {
-                    'guestId'  : guest_id,
-                    'rideshare': rideshare
+                    'guestId'  : query.guest_id,
+                    'rideshare': query.rideshare
                 }
             )
         ).as_json()
