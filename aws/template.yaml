@@ -1342,10 +1342,36 @@ Resources:
                 passthroughBehavior: "when_no_templates"
                 httpMethod: "POST"
                 requestTemplates:
-                  application/json: "#set($inputRoot = $input.path('$'))\n{\n    \"local\": \"\
-                    $input.params('local')\",\n    \"guestId\": \"$input.params('guest')\",\n    \
-                    \"rideshare\": \"$input.params('rideshare')\",\n    \
-                    \"partyId\": \"$input.params('party')\"\n}"
+                  application/json: "{\n    \"httpMethod\": \"GET\",\n    \"query\": {\n        \"local\": \"$input.params(\'local\')\",\n        \"guestId\": \"$input.params(\'guest\')\",\n        \"rideshare\": \"$input.params(\'rideshare\')\",\n        \"partyId\": \"$input.params(\'party\')\"\n    }\n}\n"
+                contentHandling: "CONVERT_TO_TEXT"
+                type: "aws"
+            post:
+              consumes:
+              - "application/x-www-form-urlencoded"
+              parameters:
+              - name: "Content-Type"
+                in: "header"
+                required: true
+                type: "string"
+              responses:
+                "303":
+                  description: "Redirect to thank-you page"
+                  headers:
+                    Location:
+                      type: "string"
+              x-amazon-apigateway-integration:
+                responses:
+                  "default":
+                    statusCode: "303"
+                    responseParameters:
+                      method.response.header.Location : "integration.response.body.body"
+              x-amazon-apigateway-integration:
+                requestTemplates:
+                  application/x-www-form-urlencoded: "{\n    \"httpMethod\": \"POST\",\n    \"query\": \"$input.body\"\n}\n"
+                uri: !Sub >-
+                  arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Rsvp.Arn}/invocations
+                passthroughBehavior: "when_no_templates"
+                httpMethod: "POST"
                 contentHandling: "CONVERT_TO_TEXT"
                 type: "aws"
           /{item}:

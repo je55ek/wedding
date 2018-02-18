@@ -105,12 +105,13 @@ class RsvpHandler(LambdaHandler):
                 `local`, a boolean, `guestId`, a string, `partyId`, a string, and `rideshare` a boolean.
             not_found_url: URL of the page to redirect to if a party is not found in the database.
             parties: Store for :obj:`Party` instances.
+            logger: Interface for emitting log messages.
         """
         self.__parties               : PartyStore        = parties
         self.__not_found             : TemporaryRedirect = TemporaryRedirect(not_found_url)
-        self.__rsvp_template         : TemplateResolver = rsvp_template
+        self.__rsvp_template         : TemplateResolver  = rsvp_template
         self.__rideshare_url_template: str               = rideshare_url_template
-        self.__summary_template      : TemplateResolver = rsvp_summary_template
+        self.__summary_template      : TemplateResolver  = rsvp_summary_template
         self.__logger                : Logger            = logger
 
     @staticmethod
@@ -229,19 +230,31 @@ class RsvpHandler(LambdaHandler):
 class RideShareHandler(LambdaHandler):
     def __init__(self,
                  local_template: TemplateResolver,
-                 out_of_town_template: TemplateResolver) -> None:
+                 out_of_town_template: TemplateResolver,
+                 not_found_url: str,
+                 thank_you_url: str,
+                 parties: PartyStore,
+                 logger: Logger) -> None:
         """Create a new instance of the :obj:`InvitationHandler` class.
 
         Args:
             local_template: A callable that returns the HTML template for the ride-share page for in-town guests.
             out_of_town_template: A callable that returns the HTML template for the ride-share page for out-of-town
                 guests.
+            not_found_url: URL of the page to redirect to if a party is not found in the database.
+            thank_you_url: Mustache template of URL to redirect users to after ride-share form submission.
+                Template must accept a variable `firstName` of type string.
+            parties: Store for :obj:`Party` instances.
+            logger: Interface for emitting log messages.
         """
         self.__local_template       = local_template
         self.__out_of_town_template = out_of_town_template
+        self.__not_found            = TemporaryRedirect(not_found_url)
+        self.__thank_you_url        = thank_you_url
+        self.__parties: PartyStore  = parties
+        self.__logger               = logger
 
-    def _handle(self, event):
-        query = RideShareQueryCodec.decode(event)
+    def __get(self, query: RideShareQuery) -> HttpResponse:
         return Ok(
             pystache.render(
                 self.__local_template() if query.local else self.__out_of_town_template(),
@@ -250,4 +263,43 @@ class RideShareHandler(LambdaHandler):
                     'rideshare': query.rideshare
                 }
             )
+        )
+
+    def __post(self, query: RideShareQuery) -> HttpResponse:
+        try:
+            party = self.__parties.modify(
+                query.party_id,
+                lambda party: party._replace(
+                    guests = [
+                        guest._replace(rideshare = query.rideshare)
+                        for guest in party.guests if guest.id == query.guest_id
+                    ]
+                )
+            )
+        except ClientError as exc:
+            self.__logger.error(
+                f'Ride share preference submitted for guest "{query.guest_id}" in party "{query.party_id}", ' +
+                f'but database operation failed with error "{exc}. Query data = {query}'
+            )
+            return InternalServerError('Something has gone horribly wrong...please call Jesse and let him know!')
+
+        maybe_guest = option.fmap(get_guest(query.guest_id))(party)
+
+        return option.cata(
+            lambda guest: TemporaryRedirect(
+                pystache.render(
+                    self.__thank_you_url,
+                    { 'firstName': guest.first_name }
+                )
+            ),
+            lambda: self.__not_found
+        )(maybe_guest)
+
+    def _handle(self, event):
+        method = event[self.METHOD_FIELD].upper()
+        query  = RideShareQueryCodec.decode(event['query'])
+        return (
+            self.__get (query) if method == 'GET'  else
+            self.__post(query) if method == 'POST' else
+            self.__not_found
         ).as_json()

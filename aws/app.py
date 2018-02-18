@@ -92,6 +92,12 @@ def argument_parser():
         help    = 'URL template for the ride sharing form.'
     )
     parser.add_argument(
+        '--thank-you-url',
+        env_var = 'THANK_YOU_URL',
+        default = '/thanks?firstName={{firstName}}',
+        help    = 'URL template for the thank-you page.'
+    )
+    parser.add_argument(
         '--verbosity',
         env_var = 'VERBOSITY',
         default = logging.getLevelName(logging.WARNING),
@@ -161,5 +167,9 @@ rsvp_handler = \
 ride_share_handler = \
     rsvp.RideShareHandler(
         lambda: get_template(args.local_rideshare_template ),
-        lambda: get_template(args.remote_rideshare_template)
+        lambda: get_template(args.remote_rideshare_template),
+        args.not_found_url,
+        args.thank_you_url,
+        party_store,
+        logger
     )
