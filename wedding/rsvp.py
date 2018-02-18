@@ -181,8 +181,8 @@ class RsvpHandler(LambdaHandler):
             )
         )
 
-    def __rsvp_context(self,
-                       party: Party,
+    @staticmethod
+    def __rsvp_context(party: Party,
                        guest_id: str) -> Dict[str, Any]:
         return {
             'partyId': party.id,
