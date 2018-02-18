@@ -1266,36 +1266,38 @@ Resources:
                 passthroughBehavior: "when_no_templates"
                 httpMethod: "POST"
                 requestTemplates:
-                  application/json: "#set($inputRoot = $input.path('$'))\n{\n    \"partyId\": \"\
-                    $input.params('party')\",\n    \"guestId\": \"$input.params('guest')\"\
-                    \n}"
+                  application/json: "#set($inputRoot = $input.path('$'))\n{\n    \"partyId\"\
+                    : \"$input.params('party')\",\n    \"guestId\": \"$input.params('guest')\"\
+                    ,\n    \"httpMethod\": \"GET\"\n}"
                 contentHandling: "CONVERT_TO_TEXT"
                 type: "aws"
             post:
               consumes:
-              - "application/json"
-              produces:
-              - "text/html"
+              - "application/x-www-form-urlencoded"
+              parameters:
+              - name: "Content-Type"
+                in: "header"
+                required: true
+                type: "string"
               responses:
-                "200":
-                  description: "200 response"
+                "302":
+                  description: "302 response"
                   headers:
-                    Content-Type:
+                    Location:
                       type: "string"
               x-amazon-apigateway-integration:
                 responses:
                   "default":
-                    statusCode: "200"
+                    statusCode: "302"
                     responseParameters:
-                      method.response.header.Content-Type: "'text/html'"
-                    responseTemplates:
-                      text/html: "$input.path('$').body"
+                      method.response.header.Location : "integration.response.body.location"
+                requestTemplates:
+                  application/x-www-form-urlencoded: "{\n    \"query\": \"$input.body\",\n\
+                    \    \"httpMethod\": \"POST\"\n}"
                 uri: !Sub >-
                   arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Rsvp.Arn}/invocations
                 passthroughBehavior: "when_no_templates"
                 httpMethod: "POST"
-                requestTemplates:
-                  application/json: "{\"query\": \"$input.path('$').body\"}"
                 contentHandling: "CONVERT_TO_TEXT"
                 type: "aws"
           '/rideshare':

@@ -4,11 +4,12 @@ from urllib.parse import parse_qs
 from typing import Callable, Any, Dict
 
 import pystache
+from botocore import ClientError
 from toolz.dicttoolz import assoc
 from toolz.functoolz import partial
 
 from wedding.general.aws.rest import LambdaHandler
-from wedding.general.aws.rest.responses import TemporaryRedirect, HttpResponse, Ok
+from wedding.general.aws.rest.responses import TemporaryRedirect, HttpResponse, Ok, InternalServerError
 from wedding.general.functional import option
 from wedding.model import PartyStore, EmailOpened, Party, CardClicked, RsvpSubmitted, get_guest, Guest
 
@@ -177,7 +178,15 @@ class RsvpHandler(LambdaHandler):
         guest_id: str = data['guestId']
         party_id: str = data['partyId']
 
-        party = self.__parties.get(party_id)
+        try:
+            party = self.__parties.get(party_id)
+        except ClientError:
+            self.__logger.error(
+                f'RSVP submitted for party "{party_id}", but party not found in database.' +
+                f'Raw form data = {event["query"]}, parsed form data = {data}'
+            )
+            return InternalServerError('Something has gone horribly wrong...please call Jesse and let him know!')
+
         maybe_guest = option.fmap(get_guest(guest_id))(party)
 
         def redirect(guest: Guest):
