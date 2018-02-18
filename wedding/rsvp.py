@@ -5,7 +5,7 @@ from typing import Callable, Any, Dict
 
 import pystache
 from botocore.exceptions import ClientError
-from toolz.dicttoolz import assoc, valmap
+from toolz.dicttoolz import assoc, valmap, dissoc
 from toolz.functoolz import partial
 from toolz.itertoolz import first
 
@@ -22,6 +22,64 @@ def _parse_bool(s: str) -> bool:
     return s.lower() == 'true'
 
 
+class _RsvpFormData:
+    PARTY_ID_FIELD = 'partyId'
+    GUEST_ID_FIELD = 'guestId'
+
+    def __init__(self,
+                 guest_id: str,
+                 party_id: str,
+                 attending: Dict[str, bool]) -> None:
+        self.__guest_id = guest_id
+        self.__party_id = party_id
+        self.__attending = attending
+
+    def __str__(self):
+        return (
+            f'RSVP Form Data: ' +
+            f'{_RsvpFormData.PARTY_ID_FIELD}={self.party_id} ' +
+            f'{_RsvpFormData.GUEST_ID_FIELD}={self.guest_id} ' +
+            f'attending={self.attending}'
+        )
+
+    def __repr__(self):
+        return self.__str__()
+
+    @property
+    def guest_id(self) -> str:
+        return self.__guest_id
+
+    @property
+    def party_id(self) -> str:
+        return self.__party_id
+
+    @property
+    def attending(self) -> Dict[str, bool]:
+        return self.__attending
+
+    @staticmethod
+    def parse(raw_form: str):
+        form_data = valmap(
+            first,
+            parse_qs(
+                raw_form,
+                strict_parsing=True
+            )
+        )
+        return _RsvpFormData(
+            guest_id  = form_data[_RsvpFormData.GUEST_ID_FIELD],
+            party_id  = form_data[_RsvpFormData.PARTY_ID_FIELD],
+            attending = valmap(
+                _parse_bool,
+                dissoc(
+                    form_data,
+                    _RsvpFormData.GUEST_ID_FIELD,
+                    _RsvpFormData.PARTY_ID_FIELD
+                )
+            )
+        )
+
+
 class EnvelopeImageHandler(LambdaHandler):
     def __init__(self,
                  envelope_url_prefix: str,
@@ -32,8 +90,8 @@ class EnvelopeImageHandler(LambdaHandler):
             envelope_url_prefix: The URL prefix of all envelope PNG images.
             parties: Store for :obj:`Party` instances.
         """
-        self.__prefix  = envelope_url_prefix
-        self.__parties = parties
+        self.__prefix : str        = envelope_url_prefix
+        self.__parties: PartyStore = parties
 
     def _handle(self, event):
         party_id = os.path.splitext(event['partyId'])[0]
@@ -58,9 +116,9 @@ class InvitationHandler(LambdaHandler):
             not_found_url: URL of the page to redirect to if a party is not found in the database.
             parties: Store for :obj:`Party` instances.
         """
-        self.__parties = parties
-        self.__redirect = TemporaryRedirect(not_found_url)
-        self.__get_template = get_template
+        self.__parties     : PartyStore        = parties
+        self.__redirect    : TemporaryRedirect = TemporaryRedirect(not_found_url)
+        self.__get_template: TemplateResolver  = get_template
 
     def __render_invitation(self, guest_id: str, party: Party) -> HttpResponse:
         return Ok(
@@ -106,12 +164,12 @@ class RsvpHandler(LambdaHandler):
             not_found_url: URL of the page to redirect to if a party is not found in the database.
             parties: Store for :obj:`Party` instances.
         """
-        self.__parties = parties
-        self.__not_found = TemporaryRedirect(not_found_url)
-        self.__rsvp_template = rsvp_template
-        self.__rideshare_url_template = rideshare_url_template
-        self.__summary_template = rsvp_summary_template
-        self.__logger = logger
+        self.__parties               : PartyStore        = parties
+        self.__not_found             : TemporaryRedirect = TemporaryRedirect(not_found_url)
+        self.__rsvp_template         : TemplateResolver  = rsvp_template
+        self.__rideshare_url_template: str               = rideshare_url_template
+        self.__summary_template      : TemplateResolver  = rsvp_summary_template
+        self.__logger                : Logger            = logger
 
     @staticmethod
     def __render(template: str,
@@ -175,42 +233,28 @@ class RsvpHandler(LambdaHandler):
         )(maybe_get_context)
 
     def __post(self, event):
-        data = valmap(
-            first,
-            parse_qs(
-                event['query'],
-                strict_parsing=True
-            )
-        )
-        guest_id: str = data['guestId']
-        party_id: str = data['partyId']
+        raw_form: str = event['query']
+        form = _RsvpFormData.parse(raw_form)
 
         try:
-            party = self.__parties.get(party_id)
-        except ClientError:
-            self.__logger.error(
-                f'RSVP submitted for party "{party_id}", but party not found in database.' +
-                f'Raw form data = {event["query"]}, parsed form data = {data}'
-            )
-            return InternalServerError('Something has gone horribly wrong...please call Jesse and let him know!')
-
-        try:
-            self.__parties.put(
-                party._replace(
+            party = self.__parties.modify(
+                form.party_id,
+                lambda party: party._replace(
                     rsvp_stage = RsvpSubmitted,
                     guests = [
-                        guest._replace(attending = data[guest.id].lower() == 'true')
-                        for guest in party.guests if guest.id in data
+                        guest._replace(attending = form.attending[guest.id])
+                        for guest in party.guests if guest.id in form.attending
                     ]
                 )
             )
-        except Exception as exc:
+        except ClientError as exc:
             self.__logger.error(
-                f'RSVP submitted for party "{party_id}", but database operation failed with error "{exc}".' +
-                f'Raw form data = {event["query"]}, parsed form data = {data}'
+                f'RSVP submitted for party "{form.party_id}", but database operation failed with error "{exc}. ' +
+                f'Raw form data = {raw_form}, parsed form data = {form}'
             )
+            return InternalServerError('Something has gone horribly wrong...please call Jesse and let him know!')
 
-        maybe_guest = option.fmap(get_guest(guest_id))(party)
+        maybe_guest = option.fmap(get_guest(form.guest_id))(party)
 
         def redirect(guest: Guest):
             return TemporaryRedirect(
@@ -218,8 +262,8 @@ class RsvpHandler(LambdaHandler):
                     self.__rideshare_url_template,
                     {
                         'local': party.local,
-                        'guestId': guest_id,
-                        'partyId': party_id,
+                        'guestId': form.guest_id,
+                        'partyId': form.party_id,
                         'rideshare': guest.rideshare or False
                     }
                 )
