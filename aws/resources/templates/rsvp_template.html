@@ -46,25 +46,16 @@
     <section>
       <div class="section container white">
         <div class="row">
-          <form action="submit">
+          <form action="rsvp" method="post" enctype="application/x-www-form-urlencoded">
             <label class="center"><h5>Who will be attending?</h5></label>
+
+            {{#guests}}
+                <p class="center guest-name">
+                  <input type="checkbox" id="{{id}}" {{#attending}}checked{{/attending}} />
+                  <label for="{{id}}">{{firstName}} {{lastName}}</label>
+                </p>
+            {{/guests}}
             
-            <p class="center guest-name">
-              <input type="checkbox" id="guest1" class="" checked="checked"/>
-              <label for="guest1">Guest Name 1</label>
-            </p>
-            <p class="center guest-name">
-              <input type="checkbox" id="guest2" class="" checked="checked"/>
-              <label for="guest2">Guest Name 2</label>
-            </p>
-            <p class="center guest-name">
-              <input type="checkbox" id="guest3" class="" checked="checked"/>
-              <label for="guest3">Guest Name 3</label>
-            </p>
-            <p class="center guest-name">
-              <input type="checkbox" id="guest4" class="" checked="checked"/>
-              <label for="guest4">Guest Name 4</label>
-            </p>
             <p class="switch center">
               <label>
                 <input id="decline" type="checkbox">
@@ -73,6 +64,9 @@
               </label>
             </p>
 
+            <input type="hidden" name="party" value="{{partyId}}">
+            <input type="hidden" name="guest" value="{{guestId}}">
+            <input type="hidden" name="local" value="{{local}}">
             <div class="center">
               <button class="btn-flat" name="action" type="submit">Submit</button>
             </div>
