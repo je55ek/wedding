@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-114412633-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-114412633-1');
+  </script>
+
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>RSVP - Local Guests | Flying J Wedding</title>
@@ -51,19 +61,19 @@
               <form action="rideshare" method="post" enctype="application/x-www-form-urlencoded">
                 <p>
                   {{#local}}
-                    Some of our guests will be flying in to Austin from out of town for our wedding. Would you be interested in picking them up from the airport or giving them a lift to the wedding venue?
+                  Some of our guests will be flying in to Austin from out of town for our wedding. Would you be interested in picking them up from the airport or giving them a lift to the wedding venue?
                   {{/local}}
                   {{^local}}
-                    Since you are flying in from out of town, you most likely will not have a car during your stay in Austin. Would you be interested in getting a ride from the airport or to the wedding venue from one of our local friends?
+                  Since you are flying in from out of town, you most likely will not have a car during your stay in Austin. Would you be interested in getting a ride from the airport or to the wedding venue from one of our local friends?
                   {{/local}}
                 </p>
                 <p><em>Interested parties will be contacted by email for more information.</em></p>
                 <p>
                   <input name="rideshare" type="radio" id="true" value="true" {{#rideshare}}checked{{/rideshare}} />
-                    <label for="true">
-                      {{#local}}Yes! I would love to give someone a lift!{{/local}}
-                      {{^local}}Yes! I would love a ride!{{/local}}
-                    </label>
+                  <label for="true">
+                    {{#local}}Yes! I would love to give someone a lift!{{/local}}
+                    {{^local}}Yes! I would love a ride!{{/local}}
+                  </label>
                 </p>
                 <p>
                   <input name="rideshare" type="radio" id="false" value="false" {{^rideshare}}checked{{/rideshare}} />
