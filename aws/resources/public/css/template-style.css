@@ -70,12 +70,12 @@ section a {
     width: 100%;
 }
 .cacti-background {
-  background: url('../images/backdrop-2.png') no-repeat 50% 50% fixed;
+  background: url('../images/backdrop-2.png') no-repeat 50% 0 fixed;
   background-size: contain;
   -moz-background-size: contain;
   -o-background-size: contain;
   -webkit-background-size: contain;
-  color: #454545;
+  width: 100%
 }
 
 .icon-block {
