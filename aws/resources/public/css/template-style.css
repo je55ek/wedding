@@ -21,6 +21,9 @@ nav .brand-logo, .side-nav li > a {
   color: #454545;
   font-size: 1.25rem;
 }
+.side-nav li span {
+  display: inline-block;
+}
 main {
   flex: 1 0 auto;
 } 
