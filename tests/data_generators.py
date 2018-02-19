@@ -4,9 +4,11 @@ from wedding.general.functional import option
 from wedding.model import Guest, EmailAddress, Party, NotInvited
 
 
-def guest(first_name: str, maybe_username: Optional[str] = None) -> Guest:
+def guest(first_name: str,
+          maybe_username: Optional[str] = None,
+          id: Optional[str] = None) -> Guest:
     return Guest(
-        id = 'id',
+        id = id or 'id',
         first_name = first_name,
         last_name = 'Doe',
         email = option.fmap(lambda username:

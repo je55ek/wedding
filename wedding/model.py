@@ -1,14 +1,15 @@
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Optional, Callable
 
 from marshmallow import ValidationError
 from marshmallow.fields import String, Boolean, Integer, DateTime, Field
 from marshmallow.validate import Range
-from toolz.functoolz import excepts, curry
+from toolz.functoolz import excepts, curry, compose
 from toolz.itertoolz import first
 
 from wedding.general.aws.dynamodb import DynamoDbStore
 from wedding.general.functional.error_handling import throw
+from wedding.general.functional import option
 from wedding.general.model import JsonCodec, codec, required, optional, build, JsonEncoder
 from wedding.general.store import Store
 
@@ -168,3 +169,52 @@ def get_guest(guest_id: str,
         guest for guest in party.guests
         if guest.id == guest_id
     )
+
+
+@curry
+def remove_guest(guest_id: str,
+                 party: Party) -> Party:
+    """Create a function that removes a guest from a party.
+
+    Args:
+        guest_id: The ID of the guest to remove from the party.
+            If the party does not contain a guest whose ID is `guest_id`, then the party is unmodified.
+        party: The party to remove `guest` from.
+
+    Returns:
+        A new :obj:`Party` instance, equivalent to `party` except with the specified guest removed.
+    """
+    return party._replace(guests = [g for g in party.guests if g.id != guest_id])
+
+
+@curry
+def set_guest(guest: Guest,
+              party: Party) -> Party:
+    """Create a function that sets or replaces a guest in a party.
+
+    Args:
+        guest: The guest to add to the party, or to replace an existing guest with. If the party already contains a
+            guest whose ID is equal to `guest.id`, then that guest is replaced with `guest`. Otherwise, `guest` is added
+            to the party.
+        party: The party to add `guest` to.
+
+    Returns:
+        A new :obj:`Party` instance, equivalent to `party` except with the specified guest added or updated.
+    """
+    without_guest = remove_guest(guest.id)(party)
+    return without_guest._replace(
+        guests = without_guest.guests + [guest]
+    )
+
+
+def modify_guest(guest_id: str,
+                 modify: Callable[[Guest], Guest]) -> Callable[[Party], Party]:
+    def _modify_guest(party: Party) -> Optional[Guest]:
+        maybe_guest = get_guest(guest_id)(party)
+        new_guest   = option.fmap(modify)(maybe_guest)
+        return compose(
+            set_guest   (new_guest),
+            remove_guest(guest_id )
+        )(party)
+
+    return _modify_guest
