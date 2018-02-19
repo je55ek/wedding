@@ -115,8 +115,9 @@ def argument_parser():
 
 args   = argument_parser().parse_args()
 dynamo = boto3.resource('dynamodb')
-logging.basicConfig(level = args.verbosity)
-logger = logging.getLogger()
+logging.basicConfig()
+logger = logging.getLogger('life.flyingjs4.wedding')
+logger.setLevel(args.verbosity)
 logger.debug('New lambda instance initialized')
 
 
