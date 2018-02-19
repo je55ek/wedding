@@ -59,15 +59,15 @@
                 </p>
                 <p><em>Interested parties will be contacted by email for more information.</em></p>
                 <p>
-                  <input name="rideshare" type="radio" id="yes" {{#rideshare}}checked{{/rideshare}} />
-                    <label for="yes">
+                  <input name="rideshare" type="radio" id="true" {{#rideshare}}checked{{/rideshare}} />
+                    <label for="true">
                       {{#local}}Yes! I would love to give someone a lift!{{/local}}
                       {{^local}}Yes! I would love a ride!{{/local}}
                     </label>
                 </p>
                 <p>
-                  <input name="rideshare" type="radio" id="no" {{^rideshare}}checked{{/rideshare}} />
-                  <label for="no">No thanks, I'll pass.</label>
+                  <input name="rideshare" type="radio" id="false" {{^rideshare}}checked{{/rideshare}} />
+                  <label for="false">No thanks, I'll pass.</label>
                 </p>
                 <input type="hidden" name="guestId" value="{{guestId}}" />
                 <input type="hidden" name="partyId" value="{{partyId}}" />
