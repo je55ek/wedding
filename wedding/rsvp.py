@@ -232,10 +232,12 @@ class RsvpHandler(LambdaHandler):
         raw_form: str = event['query']
         form = _RsvpFormData.parse(raw_form)
 
+        self.__logger.debug(f'RSVP submitted: {form}')
+
         def set_attending(guest: Guest):
             return modify_guest(
                 guest.id,
-                lambda g: g._replace(attending = form.attending.get(guest.id))
+                lambda g: g._replace(attending = form.attending.get(g.id))
             )
 
         try:
@@ -315,6 +317,7 @@ class RideShareHandler(LambdaHandler):
         )
 
     def __post(self, form: _RideShareFormData) -> HttpResponse:
+        self.__logger.debug(f'Rideshare submitted: {form}')
         try:
             party = self.__parties.modify(
                 form.party_id,
