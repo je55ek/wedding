@@ -75,7 +75,7 @@ section a {
   -moz-background-size: contain;
   -o-background-size: contain;
   -webkit-background-size: contain;
-  width: 100%
+  width: 100%;
 }
 
 .icon-block {
