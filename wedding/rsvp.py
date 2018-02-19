@@ -1,20 +1,21 @@
 from logging import Logger
-from urllib.parse import parse_qs
 from typing import Any, Dict
+from urllib.parse import parse_qs
 
 import pystache
 from botocore.exceptions import ClientError
 from marshmallow import fields
 from toolz.dicttoolz import assoc, valmap, dissoc, valfilter
-from toolz.functoolz import partial
+from toolz.functoolz import partial, compose
 from toolz.itertoolz import first
 
 from wedding import TemplateResolver
 from wedding.general.aws.rest import LambdaHandler
 from wedding.general.aws.rest.responses import TemporaryRedirect, HttpResponse, Ok, InternalServerError
 from wedding.general.functional import option
+from wedding.general.functional import sequence
 from wedding.general.model import optional, required, build, JsonCodec, codec
-from wedding.model import PartyStore, Party, RsvpSubmitted, get_guest, Guest
+from wedding.model import PartyStore, Party, RsvpSubmitted, get_guest, Guest, modify_guest
 
 
 def _parse_bool(s: str) -> bool:
@@ -231,15 +232,18 @@ class RsvpHandler(LambdaHandler):
         raw_form: str = event['query']
         form = _RsvpFormData.parse(raw_form)
 
+        def set_attending(guest: Guest):
+            return modify_guest(
+                guest.id,
+                lambda g: g._replace(attending = form.attending.get(guest.id))
+            )
+
         try:
             party = self.__parties.modify(
                 form.party_id,
-                lambda party: party._replace(
-                    rsvp_stage = RsvpSubmitted,
-                    guests = [
-                        guest._replace(attending = form.attending[guest.id])
-                        for guest in party.guests if guest.id in form.attending
-                    ]
+                compose(
+                    lambda p: p._replace(rsvp_stage = RsvpSubmitted),
+                    lambda p: sequence.foldr(set_attending)(p.guests)(p)
                 )
             )
         except ClientError as exc:
@@ -314,11 +318,9 @@ class RideShareHandler(LambdaHandler):
         try:
             party = self.__parties.modify(
                 form.party_id,
-                lambda party: party._replace(
-                    guests = [
-                        guest._replace(rideshare = form.rideshare)
-                        for guest in party.guests if guest.id == form.guest_id
-                    ]
+                modify_guest(
+                    form.guest_id,
+                    lambda guest: guest._replace(rideshare = form.rideshare)
                 )
             )
         except ClientError as exc:
