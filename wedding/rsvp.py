@@ -22,7 +22,7 @@ def _parse_bool(s: str) -> bool:
     return s.lower() == 'true'
 
 
-class _RsvpFormData:
+class RsvpFormData:
     PARTY_ID_FIELD = 'partyId'
     GUEST_ID_FIELD = 'guestId'
 
@@ -37,8 +37,8 @@ class _RsvpFormData:
     def __str__(self):
         return (
             f'RSVP Form Data: ' +
-            f'{_RsvpFormData.PARTY_ID_FIELD}={self.party_id} ' +
-            f'{_RsvpFormData.GUEST_ID_FIELD}={self.guest_id} ' +
+            f'{RsvpFormData.PARTY_ID_FIELD}={self.party_id} ' +
+            f'{RsvpFormData.GUEST_ID_FIELD}={self.guest_id} ' +
             f'attending={self.attending}'
         )
 
@@ -66,15 +66,15 @@ class _RsvpFormData:
                 strict_parsing=True
             )
         )
-        return _RsvpFormData(
-            guest_id  = form_data[_RsvpFormData.GUEST_ID_FIELD],
-            party_id  = form_data[_RsvpFormData.PARTY_ID_FIELD],
+        return RsvpFormData(
+            guest_id  = form_data[RsvpFormData.GUEST_ID_FIELD],
+            party_id  = form_data[RsvpFormData.PARTY_ID_FIELD],
             attending = valmap(
                 _parse_bool,
                 dissoc(
                     form_data,
-                    _RsvpFormData.GUEST_ID_FIELD,
-                    _RsvpFormData.PARTY_ID_FIELD
+                    RsvpFormData.GUEST_ID_FIELD,
+                    RsvpFormData.PARTY_ID_FIELD
                 )
             )
         )
@@ -89,7 +89,7 @@ RideShareQuery, RideShareQuerySchema = build('RideShareQuery', {
 RideShareQueryCodec: JsonCodec[RideShareQuery] = codec(RideShareQuerySchema(strict=True))
 
 
-class _RideShareFormData:
+class RideShareFormData:
     PARTY_ID_FIELD  = 'partyId'
     GUEST_ID_FIELD  = 'guestId'
     RIDESHARE_FIELD = 'rideshare'
@@ -105,9 +105,9 @@ class _RideShareFormData:
     def __str__(self):
         return (
                 f'Rideshare Form Data: ' +
-                f'{_RideShareFormData.PARTY_ID_FIELD}={self.party_id} ' +
-                f'{_RideShareFormData.GUEST_ID_FIELD}={self.guest_id} ' +
-                f'{_RideShareFormData.RIDESHARE_FIELD}={self.rideshare}'
+                f'{RideShareFormData.PARTY_ID_FIELD}={self.party_id} ' +
+                f'{RideShareFormData.GUEST_ID_FIELD}={self.guest_id} ' +
+                f'{RideShareFormData.RIDESHARE_FIELD}={self.rideshare}'
         )
 
     def __repr__(self):
@@ -134,10 +134,10 @@ class _RideShareFormData:
                 strict_parsing=True
             )
         )
-        return _RideShareFormData(
-            guest_id  = form_data[_RideShareFormData.GUEST_ID_FIELD],
-            party_id  = form_data[_RideShareFormData.PARTY_ID_FIELD],
-            rideshare = _parse_bool(form_data[_RideShareFormData.RIDESHARE_FIELD])
+        return RideShareFormData(
+            guest_id  = form_data[RideShareFormData.GUEST_ID_FIELD],
+            party_id  = form_data[RideShareFormData.PARTY_ID_FIELD],
+            rideshare = _parse_bool(form_data[RideShareFormData.RIDESHARE_FIELD])
         )
 
 
@@ -230,7 +230,7 @@ class RsvpHandler(LambdaHandler):
 
     def __post(self, event):
         raw_form: str = event['query']
-        form = _RsvpFormData.parse(raw_form)
+        form = RsvpFormData.parse(raw_form)
 
         self.__logger.debug(f'RSVP submitted: {form}')
 
@@ -316,7 +316,7 @@ class RideShareHandler(LambdaHandler):
             )
         )
 
-    def __post(self, form: _RideShareFormData) -> HttpResponse:
+    def __post(self, form: RideShareFormData) -> HttpResponse:
         self.__logger.debug(f'Rideshare submitted: {form}')
         try:
             party = self.__parties.modify(
@@ -348,9 +348,10 @@ class RideShareHandler(LambdaHandler):
     def _handle(self, event):
         method   = event[self.METHOD_FIELD].upper()
         raw_data = event['query']
+        self.__logger.debug(f'Ride share {method} received. Raw data = "{raw_data}"')
         return (
             self.__get (RideShareQueryCodec.decode(raw_data)) if method == 'GET'  else
-            self.__post(_RideShareFormData .parse (raw_data)) if method == 'POST' else
+            self.__post(RideShareFormData  .parse (raw_data)) if method == 'POST' else
             self.__not_found
         ).as_json()
 
