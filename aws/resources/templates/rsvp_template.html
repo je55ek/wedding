@@ -35,87 +35,91 @@ href="logo-favicon.png">
 <link href="css/template-style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 </head>
 <body>
-  <nav class="light-tan" role="navigation">
-    <div class="nav-wrapper  light-tan container">
-      <a id="logo-container" href="#" class="brand-logo"><img src="images/Flying-J-Stand-Alone_Logo.png" alt="Flying J Wedding"></a>
-      <ul class="right hide-on-med-and-down">
-        <li><a href="index.html#home">Home</a></li>
-        <li><a href="index.html#travel">Travel</a></li>
-        <li><a href="index.html#gifts">Gifts</a></li>
-      </ul>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TKGPVXP"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <nav class="light-tan" role="navigation">
+      <div class="nav-wrapper  light-tan container">
+        <a id="logo-container" href="#" class="brand-logo"><img src="images/Flying-J-Stand-Alone_Logo.png" alt="Flying J Wedding"></a>
+        <ul class="right hide-on-med-and-down">
+          <li><a href="index.html#home">Home</a></li>
+          <li><a href="index.html#travel">Travel</a></li>
+          <li><a href="index.html#gifts">Gifts</a></li>
+        </ul>
 
-      <ul id="nav-mobile" class="light-tan side-nav">
-        <li><a href="index.html#home">Home</a></li>
-        <li><a href="index.html#travel">Travel</a></li>
-        <li><a href="index.html#gifts">Gifts</a></li>
-      </ul>
-      <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
-    </div>
-  </nav>
+        <ul id="nav-mobile" class="light-tan side-nav">
+          <li><a href="index.html#home">Home</a></li>
+          <li><a href="index.html#travel">Travel</a></li>
+          <li><a href="index.html#gifts">Gifts</a></li>
+        </ul>
+        <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+      </div>
+    </nav>
 
-  <header class="taupe">
-    <br>
-    <h1 class="center">RSVP</h1>
-    <h4 class="center">We hope you can join us!</h4>
-    <br>
-    <br>
-  </header>
-  <main class="taupe">
-    <section>
-      <div class="section container white">
-        <div class="container">
-          <div class="row flow-text">
-            <div class="col s12">
-              <form action="rsvp" method="post" enctype="application/x-www-form-urlencoded">
-                <label class="center"><h5>Who will be attending?</h5></label>
+    <header class="taupe">
+      <br>
+      <h1 class="center">RSVP</h1>
+      <h4 class="center">We hope you can join us!</h4>
+      <br>
+      <br>
+    </header>
+    <main class="taupe">
+      <section>
+        <div class="section container white">
+          <div class="container">
+            <div class="row flow-text">
+              <div class="col s12">
+                <form action="rsvp" method="post" enctype="application/x-www-form-urlencoded">
+                  <label class="center"><h5>Who will be attending?</h5></label>
 
-                {{#guests}}
-                <p class="center guest-name">
-                  <input type="checkbox" value="true" id="{{id}}Check" name="{{id}}" {{#attending}}checked{{/attending}} />
-                  <label for="{{id}}Check">{{firstName}} {{lastName}}</label>
-                </p>
-                {{/guests}}
-                
-                <p class="switch center">
-                  <label>
-                    <input id="decline" type="checkbox">
-                    <span class="lever"></span>
-                    Regretfully Decline
-                  </label>
-                </p>
+                  {{#guests}}
+                  <p class="center guest-name">
+                    <input type="checkbox" value="true" id="{{id}}Check" name="{{id}}" {{#attending}}checked{{/attending}} />
+                    <label for="{{id}}Check">{{firstName}} {{lastName}}</label>
+                  </p>
+                  {{/guests}}
+                  
+                  <p class="switch center">
+                    <label>
+                      <input id="decline" type="checkbox">
+                      <span class="lever"></span>
+                      Regretfully Decline
+                    </label>
+                  </p>
 
-                <input type="hidden" name="partyId" value="{{partyId}}">
-                <input type="hidden" name="guestId" value="{{guestId}}">
-                <div class="center">
-                  <button class="btn-flat" name="action" type="submit">Submit</button>
-                </div>
-              </form>
+                  <input type="hidden" name="partyId" value="{{partyId}}">
+                  <input type="hidden" name="guestId" value="{{guestId}}">
+                  <div class="center">
+                    <button class="btn-flat" name="action" type="submit">Submit</button>
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
         </div>
+      </section> 
+    </main>
+
+    <footer class="page-footer taupe">
+      <div class="footer-copyright">
+        <div class="container">
+          <i class="material-icons">favorite</i>Created by the Flying Js
+        </div>
       </div>
-    </section> 
-  </main>
+    </footer>
 
-  <footer class="page-footer taupe">
-    <div class="footer-copyright">
-      <div class="container">
-        <i class="material-icons">favorite</i>Created by the Flying Js
-      </div>
-    </div>
-  </footer>
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <script>
+      (function($){
+        $(function(){
 
-  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
-  <script>
-    (function($){
-      $(function(){
-
-        $('.button-collapse').sideNav({
-          closeOnClick:true,
-          draggable: true,
-        });
-        $('.parallax').parallax();
+          $('.button-collapse').sideNav({
+            closeOnClick:true,
+            draggable: true,
+          });
+          $('.parallax').parallax();
 
   }); // end of document ready
 })(jQuery); // end of jQuery name space

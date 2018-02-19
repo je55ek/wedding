@@ -35,75 +35,79 @@ href="logo-favicon.png">
 <link href="css/template-style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 </head>
 <body>
-  <nav class="light-tan" role="navigation">
-    <div class="nav-wrapper  light-tan container">
-      <a id="logo-container" href="#" class="brand-logo"><img src="images/Flying-J-Stand-Alone_Logo.png" alt="Flying J Wedding"></a>
-      <ul class="right hide-on-med-and-down">
-        <li><a href="index.html#home">Home</a></li>
-        <li><a href="index.html#travel">Travel</a></li>
-        <li><a href="index.html#gifts">Gifts</a></li>
-      </ul>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TKGPVXP"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <nav class="light-tan" role="navigation">
+      <div class="nav-wrapper  light-tan container">
+        <a id="logo-container" href="#" class="brand-logo"><img src="images/Flying-J-Stand-Alone_Logo.png" alt="Flying J Wedding"></a>
+        <ul class="right hide-on-med-and-down">
+          <li><a href="index.html#home">Home</a></li>
+          <li><a href="index.html#travel">Travel</a></li>
+          <li><a href="index.html#gifts">Gifts</a></li>
+        </ul>
 
-      <ul id="nav-mobile" class="light-tan side-nav">
-        <li><a href="index.html#home">Home</a></li>
-        <li><a href="index.html#travel">Travel</a></li>
-        <li><a href="index.html#gifts">Gifts</a></li>
-      </ul>
-      <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
-    </div>
-  </nav>
+        <ul id="nav-mobile" class="light-tan side-nav">
+          <li><a href="index.html#home">Home</a></li>
+          <li><a href="index.html#travel">Travel</a></li>
+          <li><a href="index.html#gifts">Gifts</a></li>
+        </ul>
+        <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+      </div>
+    </nav>
 
-  <header class="taupe">
-    <br>
-    <h1 class="center">Thank You!</h1>
-    <h4 class="center">Your reply has been received.</h4>
-    <br>
-    <br>
-  </header>
-  <main class="taupe">
-    <section>
-      <div class="section container">
-        <div class="container">
-          <div class="row flow-text">
-            <div class="col s12">
-              <form action="submit">
-                <p>Here is a summary of the information we have:</p>
-                <ul>
-                  <li>Guests in attendance:</li>
-                  <li>Interested in ridesharing:</li>
-                </ul>
-              </form>
+    <header class="taupe">
+      <br>
+      <h1 class="center">Thank You!</h1>
+      <h4 class="center">Your reply has been received.</h4>
+      <br>
+      <br>
+    </header>
+    <main class="taupe">
+      <section>
+        <div class="section container">
+          <div class="container">
+            <div class="row flow-text">
+              <div class="col s12">
+                <form action="submit">
+                  <p>Here is a summary of the information we have:</p>
+                  <ul>
+                    <li>Guests in attendance:</li>
+                    <li>Interested in ridesharing:</li>
+                  </ul>
+                </form>
 
-              <div class="center">
-                <p><button href="#" class="btn-flat" name="action" type="submit">Edit my RSVP</button></p>
-                <p><button href="{{homepageUrl}}" class="btn-flat" name="action" type="submit">visit flyingjs4.life</button></p>
+                <div class="center">
+                  <p><button href="#" class="btn-flat" name="action" type="submit">Edit my RSVP</button></p>
+                  <p><button href="{{homepageUrl}}" class="btn-flat" name="action" type="submit">visit flyingjs4.life</button></p>
+                </div>
               </div>
             </div>
           </div>
         </div>
+      </section> 
+    </main>
+
+    <footer class="page-footer taupe">
+      <div class="footer-copyright">
+        <div class="container">
+          <i class="material-icons">favorite</i>Created by the Flying Js
+        </div>
       </div>
-    </section> 
-  </main>
+    </footer>
 
-  <footer class="page-footer taupe">
-    <div class="footer-copyright">
-      <div class="container">
-        <i class="material-icons">favorite</i>Created by the Flying Js
-      </div>
-    </div>
-  </footer>
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <script>
+      (function($){
+        $(function(){
 
-  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
-  <script>
-    (function($){
-      $(function(){
-
-        $('.button-collapse').sideNav({
-          closeOnClick:true,
-          draggable: true,
-        });
-        $('.parallax').parallax();
+          $('.button-collapse').sideNav({
+            closeOnClick:true,
+            draggable: true,
+          });
+          $('.parallax').parallax();
 
   }); // end of document ready
 })(jQuery); // end of jQuery name space

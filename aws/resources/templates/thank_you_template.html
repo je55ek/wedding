@@ -36,68 +36,73 @@ href="logo-favicon.png">
 <link href="css/template-style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 </head>
 <body>
-  <nav class="light-tan" role="navigation">
-    <div class="nav-wrapper light-tan container">
-      <a id="logo-container" href="#" class="brand-logo"><img src="images/Flying-J-Stand-Alone_Logo.png" alt="Flying J Wedding"></a>
-      <ul class="right hide-on-med-and-down">
-        <li><a href="index.html#home">Home</a></li>
-        <li><a href="index.html#travel">Travel</a></li>
-        <li><a href="index.html#gifts">Gifts</a></li>
-      </ul>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TKGPVXP"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
 
-      <ul id="nav-mobile" class="light-tan side-nav">
-        <li><a href="index.html#home">Home</a></li>
-        <li><a href="index.html#travel">Travel</a></li>
-        <li><a href="index.html#gifts">Gifts</a></li>
-      </ul>
-      <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
-    </div>
-  </nav>
-  <main class="taupe">
-    <section>
-      <div class="section container">
-        <div class="container">
-          <div class="row flow-text">
-            <div class="col s12 center">
-              {{#respondent}}
-              <h1>Thanks, {{firstName}}!</h1>
-              {{/respondent}}
-              {{^respondent}}
-              <h4>Your RSVP has been sent!</h4>
-              {{/respondent}}
-              <p>Please enjoy our wedding website!</p>
-              <p>You will be automatically redirected shortly...</p>
+    <nav class="light-tan" role="navigation">
+      <div class="nav-wrapper light-tan container">
+        <a id="logo-container" href="#" class="brand-logo"><img src="images/Flying-J-Stand-Alone_Logo.png" alt="Flying J Wedding"></a>
+        <ul class="right hide-on-med-and-down">
+          <li><a href="index.html#home">Home</a></li>
+          <li><a href="index.html#travel">Travel</a></li>
+          <li><a href="index.html#gifts">Gifts</a></li>
+        </ul>
 
-              <div class="progress">
-                <div class="indeterminate"></div>
+        <ul id="nav-mobile" class="light-tan side-nav">
+          <li><a href="index.html#home">Home</a></li>
+          <li><a href="index.html#travel">Travel</a></li>
+          <li><a href="index.html#gifts">Gifts</a></li>
+        </ul>
+        <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+      </div>
+    </nav>
+    <main class="taupe">
+      <section>
+        <div class="section container">
+          <div class="container">
+            <div class="row flow-text">
+              <div class="col s12 center">
+                {{#respondent}}
+                <h1>Thanks, {{firstName}}!</h1>
+                {{/respondent}}
+                {{^respondent}}
+                <h4>Your RSVP has been sent!</h4>
+                {{/respondent}}
+                <p>Please enjoy our wedding website!</p>
+                <p>You will be automatically redirected shortly...</p>
+
+                <div class="progress">
+                  <div class="indeterminate"></div>
+                </div>
+                
+                <p>If you are not redirected, please <a href="{{homepageUrl}}">click here</a></p>
               </div>
-              
-              <p>If you are not redirected, please <a href="{{homepageUrl}}">click here</a></p>
             </div>
           </div>
         </div>
+      </section>
+    </main>
+    <footer class="page-footer taupe">
+      <div class="footer-copyright">
+        <div class="container">
+          <i class="material-icons">favorite</i>Created by the Flying Js
+        </div>
       </div>
-    </section>
-  </main>
-  <footer class="page-footer taupe">
-    <div class="footer-copyright">
-      <div class="container">
-        <i class="material-icons">favorite</i>Created by the Flying Js
-      </div>
-    </div>
-  </footer>
+    </footer>
 
-  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
-  <script>
-    (function($){
-      $(function(){
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <script>
+      (function($){
+        $(function(){
 
-        $('.button-collapse').sideNav({
-          closeOnClick:true,
-          draggable: true,
-        });
-        $('.parallax').parallax();
+          $('.button-collapse').sideNav({
+            closeOnClick:true,
+            draggable: true,
+          });
+          $('.parallax').parallax();
 
   }); // end of document ready
 })(jQuery); // end of jQuery name space

@@ -35,90 +35,95 @@ href="logo-favicon.png">
 <link href="css/template-style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 </head>
 <body>
-  <nav class="light-tan" role="navigation">
-    <div class="nav-wrapper  light-tan container">
-      <a id="logo-container" href="#" class="brand-logo"><img src="images/Flying-J-Stand-Alone_Logo.png" alt="Flying J Wedding"></a>
-      <ul class="right hide-on-med-and-down">
-        <li><a href="index.html#home">Home</a></li>
-        <li><a href="index.html#travel">Travel</a></li>
-        <li><a href="index.html#gifts">Gifts</a></li>
-      </ul>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TKGPVXP"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
 
-      <ul id="nav-mobile" class="light-tan side-nav">
-        <li><a href="index.html#home">Home</a></li>
-        <li><a href="index.html#travel">Travel</a></li>
-        <li><a href="index.html#gifts">Gifts</a></li>
-      </ul>
-      <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
-    </div>
-  </nav>
+    <nav class="light-tan" role="navigation">
+      <div class="nav-wrapper  light-tan container">
+        <a id="logo-container" href="#" class="brand-logo"><img src="images/Flying-J-Stand-Alone_Logo.png" alt="Flying J Wedding"></a>
+        <ul class="right hide-on-med-and-down">
+          <li><a href="index.html#home">Home</a></li>
+          <li><a href="index.html#travel">Travel</a></li>
+          <li><a href="index.html#gifts">Gifts</a></li>
+        </ul>
 
-  <header class="light-tan">
-    <br>
-    <h1 class="center">RSVP</h1>
-    <h4 class="center">We are glad you can make it!</h4>
-    <br>
-    <br>
-  </header>
-  <main class="light-tan">
-    <section>
-      <div class="section container white">
-        <div class="container flow-text">
-          <div class="row">
-            <div class="col s12">
-              <form action="rideshare" method="post" enctype="application/x-www-form-urlencoded">
-                <p>
-                  {{#local}}
-                  Some of our guests will be flying in to Austin from out of town for our wedding. Would you be interested in picking them up from the airport or giving them a lift to the wedding venue?
-                  {{/local}}
-                  {{^local}}
-                  Since you are flying in from out of town, you most likely will not have a car during your stay in Austin. Would you be interested in getting a ride from the airport or to the wedding venue from one of our local friends?
-                  {{/local}}
-                </p>
-                <p><em>Interested parties will be contacted by email for more information.</em></p>
-                <p>
-                  <input name="rideshare" type="radio" id="true" value="true" {{#rideshare}}checked{{/rideshare}} />
-                  <label for="true">
-                    {{#local}}Yes! I would love to give someone a lift!{{/local}}
-                    {{^local}}Yes! I would love a ride!{{/local}}
-                  </label>
-                </p>
-                <p>
-                  <input name="rideshare" type="radio" id="false" value="false" {{^rideshare}}checked{{/rideshare}} />
-                  <label for="false">No thanks, I'll pass.</label>
-                </p>
-                <input type="hidden" name="guestId" value="{{guestId}}" />
-                <input type="hidden" name="partyId" value="{{partyId}}" />
-                <div class="center">
-                  <button class="btn-flat" name="action" type="submit">Submit</button>
-                </div>
-              </form>
+        <ul id="nav-mobile" class="light-tan side-nav">
+          <li><a href="index.html#home">Home</a></li>
+          <li><a href="index.html#travel">Travel</a></li>
+          <li><a href="index.html#gifts">Gifts</a></li>
+        </ul>
+        <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+      </div>
+    </nav>
+
+    <header class="light-tan">
+      <br>
+      <h1 class="center">RSVP</h1>
+      <h4 class="center">We are glad you can make it!</h4>
+      <br>
+      <br>
+    </header>
+    <main class="light-tan">
+      <section>
+        <div class="section container white">
+          <div class="container flow-text">
+            <div class="row">
+              <div class="col s12">
+                <form action="rideshare" method="post" enctype="application/x-www-form-urlencoded">
+                  <p>
+                    {{#local}}
+                    Some of our guests will be flying in to Austin from out of town for our wedding. Would you be interested in picking them up from the airport or giving them a lift to the wedding venue?
+                    {{/local}}
+                    {{^local}}
+                    Since you are flying in from out of town, you most likely will not have a car during your stay in Austin. Would you be interested in getting a ride from the airport or to the wedding venue from one of our local friends?
+                    {{/local}}
+                  </p>
+                  <p><em>Interested parties will be contacted by email for more information.</em></p>
+                  <p>
+                    <input name="rideshare" type="radio" id="true" value="true" {{#rideshare}}checked{{/rideshare}} />
+                    <label for="true">
+                      {{#local}}Yes! I would love to give someone a lift!{{/local}}
+                      {{^local}}Yes! I would love a ride!{{/local}}
+                    </label>
+                  </p>
+                  <p>
+                    <input name="rideshare" type="radio" id="false" value="false" {{^rideshare}}checked{{/rideshare}} />
+                    <label for="false">No thanks, I'll pass.</label>
+                  </p>
+                  <input type="hidden" name="guestId" value="{{guestId}}" />
+                  <input type="hidden" name="partyId" value="{{partyId}}" />
+                  <div class="center">
+                    <button class="btn-flat" name="action" type="submit">Submit</button>
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
         </div>
+      </section> 
+    </main>
+
+    <footer class="page-footer light-tan">
+      <div class="footer-copyright">
+        <div class="container">
+          <i class="material-icons">favorite</i>Created by the Flying Js
+        </div>
       </div>
-    </section> 
-  </main>
+    </footer>
 
-  <footer class="page-footer light-tan">
-    <div class="footer-copyright">
-      <div class="container">
-        <i class="material-icons">favorite</i>Created by the Flying Js
-      </div>
-    </div>
-  </footer>
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <script>
+      (function($){
+        $(function(){
 
-  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
-  <script>
-    (function($){
-      $(function(){
-
-        $('.button-collapse').sideNav({
-          closeOnClick:true,
-          draggable: true,
-        });
-        $('.parallax').parallax();
+          $('.button-collapse').sideNav({
+            closeOnClick:true,
+            draggable: true,
+          });
+          $('.parallax').parallax();
 
   }); // end of document ready
 })(jQuery); // end of jQuery name space
