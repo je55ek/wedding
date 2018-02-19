@@ -79,6 +79,7 @@ section a {
   -o-background-size: contain;
   -webkit-background-size: contain;
   width: 100%;
+  color: #454545;
 }
 
 .icon-block {
