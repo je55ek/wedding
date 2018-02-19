@@ -23,6 +23,10 @@ Parameters:
     Default: arn:aws:acm:us-east-1:740502329883:certificate/bd4b143e-7c8b-48c8-8809-c22391105a02
     Type: String
     Description: ARN of the SSL certificate for www.flyingjs4.life
+  LogLevel:
+    Default: ERROR
+    Type: String
+    Description: The minimum log level at which to capture log messages from Lambda functions
 Description: Flying Js serverless wedding RSVP application.
 Resources:
   Parties:
@@ -37,6 +41,7 @@ Resources:
       Environment:
         Variables:
           PARTIES_TABLE: !Ref PartiesTable
+          VERBOSITY: !Ref LogLevel
       Handler: app.parties_handler
       Role: !GetAtt 
         - PartiesRole
@@ -54,6 +59,7 @@ Resources:
       Environment:
         Variables:
           PASSENGERS_TABLE: !Ref PassengersTable
+          VERBOSITY: !Ref LogLevel
       Handler: app.passengers_handler
       Role: !GetAtt 
         - PassengersRole
@@ -72,6 +78,7 @@ Resources:
         Variables:
           PARTIES_TABLE: !Ref PartiesTable
           ENVELOPE_BUCKET: !Ref EnvelopeBucket
+          VERBOSITY: !Ref LogLevel
       Handler: app.envelope_handler
       Role: !GetAtt 
         - EnvelopesRole
@@ -89,6 +96,7 @@ Resources:
       Environment:
         Variables:
           PARTIES_TABLE: !Ref PartiesTable
+          VERBOSITY: !Ref LogLevel
       Handler: app.invitation_handler
       Role: !GetAtt
         - InvitationsRole
@@ -106,6 +114,7 @@ Resources:
       Environment:
         Variables:
           PARTIES_TABLE: !Ref PartiesTable
+          VERBOSITY: !Ref LogLevel
       Handler: app.rsvp_handler
       Role: !GetAtt
         - RsvpRole
@@ -124,6 +133,7 @@ Resources:
       Environment:
         Variables:
           PARTIES_TABLE: !Ref PartiesTable
+          VERBOSITY: !Ref LogLevel
       Role: !GetAtt
         - RideshareRole
         - Arn
@@ -138,6 +148,9 @@ Resources:
         - Value: wedding
           Key: project
       Handler: app.thank_you_handler
+      Environment:
+        Variables:
+          VERBOSITY: !Ref LogLevel
       Role: !GetAtt
         - ThanksRole
         - Arn
@@ -154,6 +167,7 @@ Resources:
       Environment:
         Variables:
           DRIVERS_TABLE: !Ref DriversTable
+          VERBOSITY: !Ref LogLevel
       Handler: app.drivers_handler
       Role: !GetAtt 
         - DriversRole

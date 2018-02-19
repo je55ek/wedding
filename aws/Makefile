@@ -30,7 +30,7 @@ deploy: clean all static
     --template-file $(CLOUDFORMATION_TEMPLATE) \
     --stack-name $(STACK_NAME) \
     --tags $(AWS_TAGS) \
-    --parameter-overrides "CodeKey=$(ZIPNAME)" "CodeBucket=$(CODE_BUCKET)" \
+    --parameter-overrides "CodeKey=$(ZIPNAME)" "CodeBucket=$(CODE_BUCKET)" "LogLevel=DEBUG" \
     --capabilities CAPABILITY_NAMED_IAM
 
 clean:
