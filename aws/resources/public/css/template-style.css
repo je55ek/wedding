@@ -7,11 +7,20 @@
  */
 
 body {
-    font-family: 'Cormorant', serif;
-    font-size: large;
+    font-family: 'Montserrat', sans-serif;
     display: flex;
     min-height: 100vh;
     flex-direction: column;
+}
+h1, h2 {
+    font-family: 'Great Vibes', cursive;
+}
+h1 {
+  font-size: 5rem;
+}
+h2 span.and-style {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.2rem;
 }
 p {
   line-height: 2rem;
@@ -86,7 +95,7 @@ section a {
 }*/
 
 .icon-block {
-  padding: 0 15px;
+  padding: 0 10px;
 }
 
 .card {
