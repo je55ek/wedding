@@ -59,7 +59,7 @@ href="logo-favicon.png">
 
     <header class="taupe">
       <br>
-      <h1 class="center">RSVP</h1>
+      <h3 class="center">RSVP</h3>
       <h4 class="center">We hope you can join us!</h4>
       <br>
       <br>
@@ -68,19 +68,19 @@ href="logo-favicon.png">
       <section>
         <div class="section container white">
           <div class="container">
-            <div class="row flow-text">
+            <div class="row">
               <div class="col s12">
                 <form action="rsvp" method="post" enctype="application/x-www-form-urlencoded">
-                  <label class="center"><h5>Who will be attending?</h5></label>
+                  <label class=""><h5>Who will be attending?</h5></label>
 
                   {{#guests}}
-                  <p class="center guest-name">
+                  <p class=" guest-name">
                     <input type="checkbox" value="true" id="{{id}}Check" name="{{id}}" {{#attending}}checked{{/attending}} />
                     <label for="{{id}}Check">{{firstName}} {{lastName}}</label>
                   </p>
                   {{/guests}}
                   
-                  <p class="switch center">
+                  <p class="switch">
                     <label>
                       <input id="decline" type="checkbox">
                       <span class="lever"></span>
@@ -90,7 +90,7 @@ href="logo-favicon.png">
 
                   <input type="hidden" name="partyId" value="{{partyId}}">
                   <input type="hidden" name="guestId" value="{{guestId}}">
-                  <div class="center">
+                  <div class="">
                     <button class="btn-flat" name="action" type="submit">Submit</button>
                   </div>
                 </form>
@@ -101,7 +101,7 @@ href="logo-favicon.png">
       </section> 
     </main>
 
-    <footer class="page-footer light-tan">
+    <footer class="page-footer taupe">
       <div class="footer-copyright">
         <div class="container">
           <p>Created by the Flying Js</p>
