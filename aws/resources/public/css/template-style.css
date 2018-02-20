@@ -35,6 +35,9 @@ main {
   background-color: #fff;
   color: #454545;
 }
+.section .gray-text {
+  color: #454545 !important;
+}
 section a {
   color: inherit;
   border-bottom: thin solid
@@ -72,7 +75,7 @@ section a {
 .parallax-container .section {
     width: 100%;
 }
-.cacti-background {
+/*.cacti-background {
   background: url('../images/backdrop-2.png') no-repeat 50% 0 fixed;
   background-size: contain;
   -moz-background-size: contain;
@@ -80,7 +83,7 @@ section a {
   -webkit-background-size: contain;
   width: 100%;
   color: #454545;
-}
+}*/
 
 .icon-block {
   padding: 0 15px;
@@ -96,6 +99,7 @@ footer.page-footer {
 }
 .page-footer .footer-copyright {
   background-color: #b784a7;
+  text-align: center;
 }
 
 /* RSVP Form Styles **************/
@@ -105,12 +109,12 @@ form label {
 
 /* Media Queries *****************/
 @media only screen and (max-width : 992px) {
-  .parallax-container .section {
+  .parallax-container .section.gray-text {
     position: absolute;
-    top: 40%;
+    top: 20%;
   }
   #index-banner .section {
-    top: 10%;
+    top: 15%;
   }
 }
 
@@ -120,7 +124,7 @@ form label {
   }
 }
 @media only screen and (min-width : 1400px) {
-  .parallax-container {
+  #index-banner.parallax-container {
   min-height: 500px;
   }
 
