@@ -237,7 +237,7 @@ class RsvpHandler(LambdaHandler):
         def set_attending(guest: Guest):
             return modify_guest(
                 guest.id,
-                lambda g: g._replace(attending = form.attending.get(g.id))
+                lambda g: g._replace(attending = form.attending.get(g.id, False))
             )
 
         try:
