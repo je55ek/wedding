@@ -28,7 +28,20 @@ class DynamoDbStore(Store[K, V]):
         )
 
     def get_all(self) -> Iterable[V]:
-        return map(self.__val.decode, self.__table.scan().get('Items'))
+        get_more = True
+        maybe_last_key = None
+
+        while get_more:
+            response = option.cata(
+                lambda last_key: self.__table.scan(ExclusiveStartKey = last_key),
+                self.__table.scan
+            )(maybe_last_key)
+
+            maybe_last_key = response.get('LastEvaluatedKey')
+            get_more = maybe_last_key is not None
+
+            for item in map(self.__val.decode, response.get('Items', [])):
+                yield item
 
     def put(self, value: V) -> None:
         self.__table.put_item(Item = self.__val.encode(value))
