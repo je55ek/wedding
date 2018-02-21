@@ -5,6 +5,7 @@ from typing import Generic, TypeVar, Union, Optional, Iterable
 from marshmallow.exceptions import MarshmallowError
 from toolz.functoolz import excepts, partial, compose
 from toolz.dicttoolz import merge
+from toolz.itertoolz import isiterable
 
 from wedding.general.aws.rest.responses import HttpResponse, MethodNotAllowed, NotFound, BadRequest, InternalServerError
 from wedding.general.model import JsonCodec, Json
@@ -75,6 +76,21 @@ class RestResource(Generic[_A], LambdaHandler):
     def __handler(exc, handler):
         return lambda f: excepts(exc, f, handler)
 
+    @staticmethod
+    def __multiple_items(result) -> bool:
+        return isiterable(result) and not isinstance(result, dict) and not RestResource.__isnamedtuple(result)
+
+    @staticmethod
+    def __isnamedtuple(x):
+        x_type = type(x)
+        bases = x_type.__bases__
+
+        if len(bases) != 1 or bases[0] != tuple:
+            return False
+
+        fields = getattr(x_type, '_fields', None)
+        return isinstance(fields, tuple) and all(type(n) == str for n in fields)
+
     def _handle(self, event):
         safe_route = compose(
             self.__handler(Exception       , self.__internal_error),
@@ -88,7 +104,7 @@ class RestResource(Generic[_A], LambdaHandler):
             {
                 'statusCode': 200,
                 'body': json.dumps(
-                    { 'items': [self.__codec.encode(item) for item in result] } if isinstance(result, (map, list)) else
+                    { 'items': [self.__codec.encode(item) for item in result] } if self.__multiple_items(result) else
                     self.__codec.encode(result)
                 )
             }
