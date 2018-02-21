@@ -131,10 +131,11 @@ form label {
   #index-banner .section {
     top: 0;
   }
-  .parallax.cactus {
+  .parallax.cactus img {
     display: none;
   }
 }
+
 @media only screen and (min-width : 1400px) {
   #index-banner.parallax-container {
   min-height: 500px;
