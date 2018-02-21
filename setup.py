@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
       name        = 'wedding',
-      version     = '1.0.16',
+      version     = '1.0.17',
       description = 'Flying Js serverless wedding RSVP application.',
       author      = 'Jesse',
       license     = 'MIT',
