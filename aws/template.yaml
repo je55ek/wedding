@@ -1626,6 +1626,7 @@ Resources:
         x-amazon-apigateway-binary-media-types:
         - "image/png"
         - "image/jpeg"
+        - "image/gif"
         - "application/octet-stream"
         - "image/webp"
         - "image/apng"
