@@ -171,8 +171,8 @@ rsvp_handler = \
         lambda: get_template(args.rsvp_template),
         lambda: get_template(args.rsvp_summary_template),
         args.rideshare_url,
-        args.not_found_url,
         args.decline_url,
+        args.not_found_url,
         party_store,
         logger
     )
