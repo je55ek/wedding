@@ -30,6 +30,12 @@ nav .brand-logo, .side-nav li > a {
   color: #454545;
   font-size: 1.25rem;
 }
+img.logo {
+  height: 25px;
+  max-height: 25px;
+  margin-bottom: -5px;
+  width: auto;
+}
 .side-nav li span {
   display: inline-block;
 }
