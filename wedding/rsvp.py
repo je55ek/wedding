@@ -188,7 +188,7 @@ class RsvpHandler(LambdaHandler):
                     'id'       : guest.id,
                     'firstName': guest.first_name,
                     'lastName' : guest.last_name,
-                    'attending': guest.attending or True
+                    'attending': guest.attending if guest.attending is not None else True
                 }
                 for guest in party.guests
             ]
