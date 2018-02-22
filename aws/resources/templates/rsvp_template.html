@@ -69,36 +69,37 @@ href="logo-favicon.ico">
         <div class="section container white">
           <div class="container">
             <div class="row">
-              <div class="col s12">
-                <form action="rsvp" method="post" enctype="application/x-www-form-urlencoded">
-                  <label class=""><h5>Who will be attending?</h5></label>
-
+              <form action="rsvp" method="post" enctype="application/x-www-form-urlencoded">
+                <div class="col s12">
+                  <label class="center"><h5>Who will be attending?</h5></label>
                   {{#guests}}
-                  <p class=" guest-name">
-                    <input type="checkbox" value="true" id="{{id}}Check" name="{{id}}" {{#attending}}checked{{/attending}} />
-                    <label for="{{id}}Check">{{firstName}} {{lastName}}</label>
-                  </p>
-                  {{/guests}}
-                  
-                  <p class="switch">
+                </div>
+                <div class="col s4 offset-s4">
+                    <p class="guest-name">
+                      <input type="checkbox" value="true" id="{{id}}Check" name="{{id}}" {{#attending}}checked{{/attending}} />
+                      <label for="{{id}}Check">{{firstName}} {{lastName}}</label>
+                    </p>
+                    {{/guests}}
+                </div>
+                <div class="col s12">
+                  <p class="switch center">
                     <label>
                       <input id="decline" type="checkbox">
                       <span class="lever"></span>
                       Regretfully Decline
                     </label>
                   </p>
-
                   <input type="hidden" name="partyId" value="{{partyId}}">
                   <input type="hidden" name="guestId" value="{{guestId}}">
-                  <div class="">
+                  <div class="center">
                     <button class="btn-flat" name="action" type="submit">Submit</button>
                   </div>
-                </form>
-              </div>
+                </div>
+              </form>
             </div>
           </div>
         </div>
-      </section> 
+      </section>
     </main>
 
     <footer class="page-footer taupe">
