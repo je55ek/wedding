@@ -144,7 +144,6 @@ class RideShareFormData:
 class RsvpHandler(LambdaHandler):
     def __init__(self,
                  rsvp_template: TemplateResolver,
-                 rsvp_summary_template: TemplateResolver,
                  rideshare_url_template: str,
                  decline_url: str,
                  not_found_url: str,
@@ -154,7 +153,6 @@ class RsvpHandler(LambdaHandler):
 
         Args:
             rsvp_template: A callable that returns the HTML template for the RSVP page.
-            rsvp_summary_template: A callable that returns the HTML template for the RSVP summary page.
             rideshare_url_template: A pystache template for the URL of the ridesharing form. Must contain variables
                 `local`, a boolean, `guestId`, a string, `partyId`, a string, and `rideshare` a boolean.
             decline_url: The URL of the page to redirect to if a party declines the invitation.
@@ -167,7 +165,6 @@ class RsvpHandler(LambdaHandler):
         self.__rsvp_template         : TemplateResolver  = rsvp_template
         self.__rideshare_url_template: str               = rideshare_url_template
         self.__decline_url           : str               = decline_url
-        self.__summary_template      : TemplateResolver  = rsvp_summary_template
         self.__logger                : Logger            = logger
 
     @staticmethod
@@ -197,30 +194,12 @@ class RsvpHandler(LambdaHandler):
             ]
         }
 
-    def __summary_context(self,
-                          party: Party,
-                          guest_id: str) -> Dict[str, Any]:
-        def log_error():
-            self.__logger.error(f'Guest {guest_id} not found in party {party.id}')
-            return False
-
-        return assoc(
-            self.__rsvp_context(party, guest_id),
-            'rideshare',
-            option.cata(
-                lambda guest: guest.rideshare,
-                log_error
-            )(get_guest(guest_id)(party))
-        )
-
     def __get(self, event):
         party_id: str = event['partyId']
         guest_id: str = event['guestId']
 
         maybe_get_context, get_template = option.fmap(
-            lambda party:
-            (partial(self.__summary_context, party), self.__summary_template) if party.rsvp_stage == RsvpSubmitted else
-            (partial(self.__rsvp_context   , party), self.__rsvp_template   )
+            lambda party: (partial(self.__rsvp_context, party), self.__rsvp_template)
         )(self.__parties.get(party_id))
 
         return option.cata(

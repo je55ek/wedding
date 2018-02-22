@@ -69,12 +69,6 @@ def argument_parser():
         help    = 'S3 key of the rsvp template'
     )
     parser.add_argument(
-        '--rsvp-summary-template',
-        env_var = 'RSVP_SUMMARY_TEMPLATE',
-        default = 'rsvp_summary_template.html',
-        help    = 'S3 key of the rsvp summary template'
-    )
-    parser.add_argument(
         '--thank-you-template',
         env_var = 'THANK_YOU_TEMPLATE',
         default = 'thank_you_template.html',
@@ -169,7 +163,6 @@ invitation_handler = \
 rsvp_handler = \
     rsvp.RsvpHandler(
         lambda: get_template(args.rsvp_template),
-        lambda: get_template(args.rsvp_summary_template),
         args.rideshare_url,
         args.decline_url,
         args.not_found_url,
