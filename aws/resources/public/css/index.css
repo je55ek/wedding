@@ -1,0 +1,125 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+h1, h2, h3 {
+    font-family: 'Great Vibes', cursive;
+}
+h1 {
+  font-size: 5rem;
+}
+h2 span.and-style {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.2rem;
+}
+h3 {
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  font-size: 3rem;
+}
+p {
+  line-height: 2rem;
+}
+nav ul a,
+nav .brand-logo, .side-nav li > a {
+  color: #454545;
+  font-size: 1.25rem;
+}
+.side-nav li span {
+  display: inline-block;
+}
+main {
+  flex: 1 0 auto;
+} 
+.taupe {
+  background-color: #f7f4ea;
+  color: #454545;
+} 
+.light-tan {
+  background-color: #fff;
+  color: #454545;
+}
+.section .gray-text {
+  color: #454545 !important;
+}
+section a {
+  color: inherit;
+  border-bottom: thin solid
+}
+.btn-flat {
+  border: solid thin;
+  border-radius: 0;
+  color: inherit;
+  transition: none;
+  -webkit-transition: none;
+}
+.btn-flat:focus, .btn-flat:active {
+  background-color: inherit;
+  color:inherit; 
+}
+.taupe .btn-flat:hover {
+  background-color: #b784a7;
+  color: #f7f4ea;
+}
+.light-tan .btn-flat:hover {
+  background-color: #454545;
+  color: #fff;
+  border-color: #fff;
+}
+.button-collapse {
+  color: #454545;
+}
+
+.parallax-container {
+  min-height: 380px;
+  line-height: 0;
+  height: auto;
+  color: rgba(255,255,255,.9);
+}
+.parallax-container .section {
+    width: 100%;
+}
+
+.icon-block {
+  padding: 0 10px;
+}
+
+.card {
+  box-shadow: none;
+  -webkit-box-shadow: none;
+}
+
+footer.page-footer {
+  margin: 0;
+}
+.page-footer .footer-copyright {
+  background-color: #b784a7;
+  text-align: center;
+}
+
+@media only screen and (max-width : 992px) {
+  .parallax-container .section.gray-text {
+    position: absolute;
+    top: 20%;
+  }
+  #index-banner .section {
+    top: 15%;
+  }
+}
+
+@media only screen and (max-width : 600px) {
+  #index-banner .section {
+    top: 0;
+  }
+  .parallax.cactus {
+    display: none;
+  }
+}
+@media only screen and (min-width : 1400px) {
+  #index-banner.parallax-container {
+  min-height: 500px;
+  }
+
+}
