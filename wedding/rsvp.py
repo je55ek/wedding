@@ -146,6 +146,7 @@ class RsvpHandler(LambdaHandler):
                  rsvp_template: TemplateResolver,
                  rsvp_summary_template: TemplateResolver,
                  rideshare_url_template: str,
+                 decline_url: str,
                  not_found_url: str,
                  parties: PartyStore,
                  logger: Logger) -> None:
@@ -156,6 +157,7 @@ class RsvpHandler(LambdaHandler):
             rsvp_summary_template: A callable that returns the HTML template for the RSVP summary page.
             rideshare_url_template: A pystache template for the URL of the ridesharing form. Must contain variables
                 `local`, a boolean, `guestId`, a string, `partyId`, a string, and `rideshare` a boolean.
+            decline_url: The URL of the page to redirect to if a party declines the invitation.
             not_found_url: URL of the page to redirect to if a party is not found in the database.
             parties: Store for :obj:`Party` instances.
             logger: Interface for emitting log messages.
@@ -164,6 +166,7 @@ class RsvpHandler(LambdaHandler):
         self.__not_found             : TemporaryRedirect = TemporaryRedirect(not_found_url)
         self.__rsvp_template         : TemplateResolver  = rsvp_template
         self.__rideshare_url_template: str               = rideshare_url_template
+        self.__decline_url           : str               = decline_url
         self.__summary_template      : TemplateResolver  = rsvp_summary_template
         self.__logger                : Logger            = logger
 
@@ -241,7 +244,7 @@ class RsvpHandler(LambdaHandler):
             )
 
         try:
-            party = self.__parties.modify(
+            maybe_party = self.__parties.modify(
                 form.party_id,
                 compose(
                     lambda p: p._replace(rsvp_stage = RsvpSubmitted),
@@ -255,26 +258,29 @@ class RsvpHandler(LambdaHandler):
             )
             return InternalServerError('Something has gone horribly wrong...please call Jesse and let him know!')
 
-        maybe_guest = option.fmap(get_guest(form.guest_id))(party)
-
-        def redirect(guest: Guest):
+        def _rideshare_url(party: Party):
+            maybe_guest     = get_guest(form.guest_id)
             rideshare_query = RideShareQuery(
                 local     = party.local  ,
                 guest_id  = form.guest_id,
                 party_id  = form.party_id,
-                rideshare = guest.rideshare or False
+                rideshare = option.fmap(lambda guest: guest.rideshare)(maybe_guest) or False
             )
+            return pystache.render(
+                self.__rideshare_url_template,
+                RideShareQueryCodec.encode(rideshare_query)
+            )
+
+        def redirect(party: Party):
             return TemporaryRedirect(
-                pystache.render(
-                    self.__rideshare_url_template,
-                    RideShareQueryCodec.encode(rideshare_query)
-                )
+                self.__decline_url if all(not guest.attending for guest in party.guests) else
+                _rideshare_url(party)
             )
 
         return option.cata(
             redirect,
             lambda: self.__not_found
-        )(maybe_guest)
+        )(maybe_party)
 
     def _handle(self, event):
         method = event[self.METHOD_FIELD].upper()

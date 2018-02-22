@@ -92,6 +92,12 @@ def argument_parser():
         help    = 'URL template for the ride sharing form.'
     )
     parser.add_argument(
+        '--decline-url',
+        env_var = 'DECLINE_URL',
+        default = '/decline.html',
+        help    = 'URL of the page to show when a whole party is not attending.'
+    )
+    parser.add_argument(
         '--thank-you-url',
         env_var = 'THANK_YOU_URL',
         default = '/thanks?firstName={{firstName}}',
@@ -166,6 +172,7 @@ rsvp_handler = \
         lambda: get_template(args.rsvp_summary_template),
         args.rideshare_url,
         args.not_found_url,
+        args.decline_url,
         party_store,
         logger
     )
