@@ -141,5 +141,13 @@ form label {
   }
 
 }
-
+/* 404 page ***/
+.background-error {
+  background-color: #FFFBF7;
+  color: #b784a7;
+}
+.background-error a {
+    font-size: xx-small;
+    text-decoration: none;
+}
 
