@@ -5,7 +5,7 @@ from urllib.parse import parse_qs
 import pystache
 from botocore.exceptions import ClientError
 from marshmallow import fields
-from toolz.dicttoolz import assoc, valmap, dissoc, valfilter
+from toolz.dicttoolz import valmap, dissoc, valfilter
 from toolz.functoolz import partial, compose
 from toolz.itertoolz import first
 
