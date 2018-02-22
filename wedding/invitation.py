@@ -5,7 +5,7 @@ import pystache
 from wedding.general.aws.rest import LambdaHandler
 from wedding.general.aws.rest.responses import TemporaryRedirect, HttpResponse, Ok
 from wedding.general.functional import option
-from wedding.model import PartyStore, EmailOpened, Party, CardClicked
+from wedding.model import PartyStore, EmailOpened, Party, CardClicked, advance_stage
 from wedding import TemplateResolver
 
 
@@ -26,7 +26,7 @@ class EnvelopeImageHandler(LambdaHandler):
         party_id = os.path.splitext(event['partyId'])[0]
         self.__parties.modify(
             party_id,
-            lambda party: party._replace(rsvp_stage = EmailOpened)
+            advance_stage(EmailOpened)
         )
         return {
             'location': self.__prefix + ('/' if not self.__prefix.endswith('/') else '') + f'{party_id}.png'
@@ -66,7 +66,7 @@ class InvitationHandler(LambdaHandler):
 
         self.__parties.modify(
             party_id,
-            lambda party: party._replace(rsvp_stage = CardClicked)
+            advance_stage(CardClicked)
         )
 
         return option.cata(

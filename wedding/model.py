@@ -26,13 +26,27 @@ class RsvpStage(ABC):
     def shows(self) -> str:
         pass
 
+    @property
+    @abstractmethod
+    def _index(self) -> int:
+        pass
+
     @staticmethod
-    def instance(name: str, shows: str):
+    def instance(name: str, shows: str, index: int):
         return type(
             f'_{name}',
             (RsvpStage,),
-            { 'shows': property(lambda _: shows) }
+            {
+                'shows': property(lambda _: shows),
+                '_index': property(lambda _: index)
+            }
         )()
+
+    def advance_to(self, next_stage):
+        return (
+            next_stage if next_stage._index > self._index else
+            self
+        )
 
 
 class RsvpStageField(Field):
@@ -53,11 +67,11 @@ class RsvpStageField(Field):
         )
 
 
-RsvpSubmitted = RsvpStage.instance('RsvpSubmitted', 'rsvp_submitted')
-CardClicked   = RsvpStage.instance('CardClicked'  , 'card_clicked'  )
-EmailOpened   = RsvpStage.instance('EmailOpened'  , 'email_opened'  )
-EmailSent     = RsvpStage.instance('EmailSent'    , 'email_sent'    )
-NotInvited    = RsvpStage.instance('NotInvited'   , 'not_invited'   )
+RsvpSubmitted = RsvpStage.instance('RsvpSubmitted', 'rsvp_submitted', 4)
+CardClicked   = RsvpStage.instance('CardClicked'  , 'card_clicked'  , 3)
+EmailOpened   = RsvpStage.instance('EmailOpened'  , 'email_opened'  , 2)
+EmailSent     = RsvpStage.instance('EmailSent'    , 'email_sent'    , 1)
+NotInvited    = RsvpStage.instance('NotInvited'   , 'not_invited'   , 0)
 
 
 EmailAddress, EmailAddressSchema = build('EmailAddress', {
@@ -218,3 +232,10 @@ def modify_guest(guest_id: str,
         )(party)
 
     return _modify_guest
+
+
+@curry
+def advance_stage(to_stage: RsvpStage, party: Party) -> Party:
+    return party._replace(
+        rsvp_stage = party.rsvp_stage.advance_to(to_stage)
+    )

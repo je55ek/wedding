@@ -71,3 +71,39 @@ def test_modify_guest():
 
     expected_john = guest('Joe', 'john', john.id)
     assert expected_john in modified_party.guests
+
+
+def test_advance_stage():
+    def _test(stage, earlier, later):
+        for earlier_stage in earlier:
+            assert stage.advance_to(earlier_stage) == stage
+
+        assert stage.advance_to(stage) == stage
+
+        for later_stage in later:
+            assert stage.advance_to(later_stage) == later_stage
+
+    _test(NotInvited   , []          , [EmailSent  , EmailOpened , CardClicked   , RsvpSubmitted])
+    _test(EmailSent    , [NotInvited], [EmailOpened, CardClicked , RsvpSubmitted                ])
+    _test(EmailOpened  , [NotInvited , EmailSent]  , [CardClicked, RsvpSubmitted                ])
+    _test(CardClicked  , [NotInvited , EmailSent   , EmailOpened], [RsvpSubmitted               ])
+    _test(RsvpSubmitted, [NotInvited , EmailSent   , EmailOpened , CardClicked]  ,             [])
+
+
+def test_advance_stage_party():
+    def _test(stage, earlier, later):
+        test_party = party._replace(rsvp_stage = stage)
+
+        for earlier_stage in earlier:
+            assert advance_stage(earlier_stage)(test_party).rsvp_stage == stage
+
+        assert advance_stage(test_party.rsvp_stage)(test_party).rsvp_stage == stage
+
+        for later_stage in later:
+            assert advance_stage(later_stage)(test_party).rsvp_stage == later_stage
+
+    _test(NotInvited   , []          , [EmailSent  , EmailOpened , CardClicked   , RsvpSubmitted])
+    _test(EmailSent    , [NotInvited], [EmailOpened, CardClicked , RsvpSubmitted                ])
+    _test(EmailOpened  , [NotInvited , EmailSent]  , [CardClicked, RsvpSubmitted                ])
+    _test(CardClicked  , [NotInvited , EmailSent   , EmailOpened], [RsvpSubmitted               ])
+    _test(RsvpSubmitted, [NotInvited , EmailSent   , EmailOpened , CardClicked]  ,             [])

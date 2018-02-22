@@ -15,7 +15,7 @@ from wedding.general.aws.rest.responses import TemporaryRedirect, HttpResponse, 
 from wedding.general.functional import option
 from wedding.general.functional import sequence
 from wedding.general.model import optional, required, build, JsonCodec, codec
-from wedding.model import PartyStore, Party, RsvpSubmitted, get_guest, Guest, modify_guest
+from wedding.model import PartyStore, Party, RsvpSubmitted, get_guest, Guest, modify_guest, advance_stage
 
 
 def _parse_bool(s: str) -> bool:
@@ -247,7 +247,7 @@ class RsvpHandler(LambdaHandler):
             maybe_party = self.__parties.modify(
                 form.party_id,
                 compose(
-                    lambda p: p._replace(rsvp_stage = RsvpSubmitted),
+                    advance_stage(RsvpSubmitted),
                     lambda p: sequence.foldr(set_attending)(p.guests)(p)
                 )
             )
