@@ -84,15 +84,6 @@ section a {
 .parallax-container .section {
     width: 100%;
 }
-/*.cacti-background {
-  background: url('../images/backdrop-2.png') no-repeat 50% 0 fixed;
-  background-size: contain;
-  -moz-background-size: contain;
-  -o-background-size: contain;
-  -webkit-background-size: contain;
-  width: 100%;
-  color: #454545;
-}*/
 
 .icon-block {
   padding: 0 10px;
@@ -144,10 +135,10 @@ form label {
 /* 404 page ***/
 .background-error {
   background-color: #FFFBF7;
-  color: #b784a7;
 }
-.background-error a {
+.page-footer .footer-copyright a {
     font-size: xx-small;
     text-decoration: none;
+    color: #f7f4ea;
 }
 
