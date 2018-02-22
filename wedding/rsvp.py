@@ -259,7 +259,7 @@ class RsvpHandler(LambdaHandler):
             return InternalServerError('Something has gone horribly wrong...please call Jesse and let him know!')
 
         def _rideshare_url(party: Party):
-            maybe_guest     = get_guest(form.guest_id)
+            maybe_guest     = get_guest(form.guest_id)(party)
             rideshare_query = RideShareQuery(
                 local     = party.local  ,
                 guest_id  = form.guest_id,
