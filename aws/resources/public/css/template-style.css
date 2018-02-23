@@ -101,6 +101,10 @@ footer.page-footer {
   background-color: #b784a7;
   text-align: center;
 }
+.page-footer .footer-copyright a  {
+  color: inherit;
+
+}
 
 /* RSVP Form Styles **************/
 form label {
@@ -136,7 +140,7 @@ form label {
 .background-error {
   background-color: #FFFBF7;
 }
-.page-footer .footer-copyright a {
+.page-footer.background-error .footer-copyright a {
     font-size: xx-small;
     text-decoration: none;
     color: #f7f4ea;
