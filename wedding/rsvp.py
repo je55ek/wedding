@@ -146,7 +146,7 @@ class RsvpHandler(LambdaHandler):
                  rsvp_template: TemplateResolver,
                  rideshare_url_template: str,
                  decline_url: str,
-                 not_found_url: str,
+                 error_url: str,
                  parties: PartyStore,
                  logger: Logger) -> None:
         """Create a new instance of the :obj:`RsvpHandler` class.
@@ -156,12 +156,12 @@ class RsvpHandler(LambdaHandler):
             rideshare_url_template: A pystache template for the URL of the ridesharing form. Must contain variables
                 `local`, a boolean, `guestId`, a string, `partyId`, a string, and `rideshare` a boolean.
             decline_url: The URL of the page to redirect to if a party declines the invitation.
-            not_found_url: URL of the page to redirect to if a party is not found in the database.
+            error_url: URL of the page to redirect to if a party is not found in the database.
             parties: Store for :obj:`Party` instances.
             logger: Interface for emitting log messages.
         """
         self.__parties               : PartyStore        = parties
-        self.__not_found             : TemporaryRedirect = TemporaryRedirect(not_found_url)
+        self.__internal_error        : TemporaryRedirect = TemporaryRedirect(error_url)
         self.__rsvp_template         : TemplateResolver  = rsvp_template
         self.__rideshare_url_template: str               = rideshare_url_template
         self.__decline_url           : str               = decline_url
@@ -207,7 +207,7 @@ class RsvpHandler(LambdaHandler):
                 get_template(),
                 get_context(guest_id)
             ),
-            lambda: self.__not_found
+            lambda: self.__internal_error
         )(maybe_get_context)
 
     def __post(self, event):
@@ -258,7 +258,7 @@ class RsvpHandler(LambdaHandler):
 
         return option.cata(
             redirect,
-            lambda: self.__not_found
+            lambda: self.__internal_error
         )(maybe_party)
 
     def _handle(self, event):
@@ -266,14 +266,14 @@ class RsvpHandler(LambdaHandler):
         return (
             self.__get (event) if method == 'GET'  else
             self.__post(event) if method == 'POST' else
-            self.__not_found
+            self.__internal_error
         ).as_json()
 
 
 class RideShareHandler(LambdaHandler):
     def __init__(self,
                  template: TemplateResolver,
-                 not_found_url: str,
+                 error_url: str,
                  thank_you_url: str,
                  parties: PartyStore,
                  logger: Logger) -> None:
@@ -281,14 +281,14 @@ class RideShareHandler(LambdaHandler):
 
         Args:
             template: A callable that returns the HTML template for the ride-share form.
-            not_found_url: URL of the page to redirect to if a party is not found in the database.
+            error_url: URL of the page to redirect to if a party is not found in the database.
             thank_you_url: Mustache template of URL to redirect users to after ride-share form submission.
                 Template must accept a variable `firstName` of type string.
             parties: Store for :obj:`Party` instances.
             logger: Interface for emitting log messages.
         """
         self.__template             = template
-        self.__not_found            = TemporaryRedirect(not_found_url)
+        self.__internal_error       = TemporaryRedirect(error_url)
         self.__thank_you_url        = thank_you_url
         self.__parties: PartyStore  = parties
         self.__logger               = logger
@@ -327,7 +327,7 @@ class RideShareHandler(LambdaHandler):
                     { 'firstName': guest.first_name }
                 )
             ),
-            lambda: self.__not_found
+            lambda: self.__internal_error
         )(maybe_guest)
 
     def _handle(self, event):
@@ -337,7 +337,7 @@ class RideShareHandler(LambdaHandler):
         return (
             self.__get (RideShareQueryCodec.decode(raw_data)) if method == 'GET'  else
             self.__post(RideShareFormData  .parse (raw_data)) if method == 'POST' else
-            self.__not_found
+            self.__internal_error
         ).as_json()
 
 

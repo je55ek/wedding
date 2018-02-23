@@ -36,17 +36,17 @@ class EnvelopeImageHandler(LambdaHandler):
 class InvitationHandler(LambdaHandler):
     def __init__(self,
                  get_template: TemplateResolver,
-                 not_found_url: str,
+                 error_url: str,
                  parties: PartyStore) -> None:
         """Create a new instance of the :obj:`InvitationHandler` class.
 
         Args:
             get_template: A callable that returns the HTML template for the invitations.
-            not_found_url: URL of the page to redirect to if a party is not found in the database.
+            error_url: URL of the page to redirect to if a party is not found in the database.
             parties: Store for :obj:`Party` instances.
         """
         self.__parties     : PartyStore        = parties
-        self.__redirect    : TemporaryRedirect = TemporaryRedirect(not_found_url)
+        self.__redirect    : TemporaryRedirect = TemporaryRedirect(error_url)
         self.__get_template: TemplateResolver  = get_template
 
     def __render_invitation(self, guest_id: str, party: Party) -> HttpResponse:

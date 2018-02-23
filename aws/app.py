@@ -75,9 +75,9 @@ def argument_parser():
         help    = 'S3 key of the thank-you-for-your-RSVP template'
     )
     parser.add_argument(
-        '--not-found-url',
-        env_var = 'NOT_FOUND_URL',
-        default = 'http://www.flyingjs4.life/404.html'
+        '--error-url',
+        env_var = 'ERROR_URL',
+        default = 'https://www.flyingjs4.life/500.html'
     )
     parser.add_argument(
         '--rideshare-url',
@@ -155,7 +155,7 @@ envelope_handler = \
 invitation_handler = \
     wedding.invitation.InvitationHandler(
         lambda: get_template(args.invitation_template),
-        args.not_found_url,
+        args.error_url,
         party_store
     )
 
@@ -165,7 +165,7 @@ rsvp_handler = \
         lambda: get_template(args.rsvp_template),
         args.rideshare_url,
         args.decline_url,
-        args.not_found_url,
+        args.error_url,
         party_store,
         logger
     )
@@ -174,7 +174,7 @@ rsvp_handler = \
 ride_share_handler = \
     rsvp.RideShareHandler(
         lambda: get_template(args.rideshare_template),
-        args.not_found_url,
+        args.error_url,
         args.thank_you_url,
         party_store,
         logger
