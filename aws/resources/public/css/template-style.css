@@ -141,4 +141,9 @@ form label {
     text-decoration: none;
     color: #f7f4ea;
 }
-
+img.logo {
+  height: 25px;
+  max-height: 25px;
+  margin-bottom: -5px;
+  width: auto;
+}

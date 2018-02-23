@@ -123,3 +123,9 @@ footer.page-footer {
   }
 
 }
+img.logo {
+  height: 25px;
+  max-height: 25px;
+  margin-bottom: -5px;
+  width: auto;
+}
