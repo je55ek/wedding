@@ -9,7 +9,7 @@ setup(
       packages    = find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
       install_requires = [
           'toolz == 0.9.0',
-          'marshmallow == 2.15.0',
+          'marshmallow == 2.15.1',
           'configargparse == 0.12.0',
           'pystache == 0.5.4'
       ],
